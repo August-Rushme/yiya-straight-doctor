@@ -1,0 +1,58 @@
+{
+  "easycom": {
+    "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "我的工作台"
+      }
+    }, {
+      "path": "pages/patient/patient",
+      "style": {
+        "navigationBarTitleText": "患者管理",
+        "enablePullDownRefresh": false
+      }
+
+    }, {
+      "path": "pages/home/home",
+      "style": {
+        "navigationBarTitleText": "个人中心",
+        "enablePullDownRefresh": false
+      }
+
+    }
+  ],
+  "tabBar": {
+    "color": "#B5B5B5",
+    "selectedColor": "#55a2ef",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [{
+        "pagePath": "pages/index/index",
+        "text": "工作台",
+        "iconPath": "static/tabbar/index.png",
+        "selectedIconPath": "static/tabbar/indexSelected.png"
+      },
+      {
+        "pagePath": "pages/patient/patient",
+        "text": "患者管理",
+        "iconPath": "static/tabbar/patient.png",
+        "selectedIconPath": "static/tabbar/patientSelected.png"
+      },
+      {
+        "pagePath": "pages/home/home",
+        "text": "我的",
+        "iconPath": "static/tabbar/my.png",
+        "selectedIconPath": "static/tabbar/mySelected.png"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "神州牙都会医生端",
+    "navigationBarBackgroundColor": "#55a2ef",
+    "backgroundColor": "#fff"
+  }
+}
