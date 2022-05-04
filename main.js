@@ -4,8 +4,17 @@ import App from './App'
 import Vue from 'vue'
 // 引入全局组件
 import uView from '@/uni_modules/uview-ui'
+import divider from "@/components/common/divider.vue"
 
 Vue.use(uView)
+Vue.component('divider', divider)
+
+// 挂载全局属性
+import message from './service/request/message.js'
+import http from './service/request/index.js'
+
+Vue.prototype.$message = message
+Vue.prototype.$http = http
 Vue.config.productionTip = false
 App.mpType = 'app'
 const app = new Vue({

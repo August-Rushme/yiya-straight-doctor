@@ -1,27 +1,110 @@
 <template>
-  <view>
-    患者管理
-   
+  <view class="parient">
+    <u-empty mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" title="数据为空" v-if="isEmpty"></u-empty>
+    <view class="content" v-if="!isEmpty">
+      <patient-search
+        placeholder="姓名"
+        pageName="patient"
+        @searchHandle="handleSearch"
+        @clearHandler="handleClear"
+      ></patient-search>
+      <!-- 标签区域 -->
+      <view class="d-flex j-start mt-2">
+        <view v-for="(item, index) in radios" :key="index" class="px-2">
+          <u-tag
+            :text="item.text"
+            :plain="!item.checked"
+            borderColor="#f5f5f5"
+            color="#333333"
+            :name="index"
+            @click="radioClick"
+          ></u-tag>
+        </view>
+      </view>
+      <!-- 病历区域 -->
+      <patient-list :medicalRecordData="medicalRecordData"></patient-list>
+    </view>
   </view>
 </template>
 
 <script>
-
-  export default {
-    components:{
-   
+import patientSearch from '@/components/common/search.vue';
+import patientList from '@/components/patient/patient-list.vue';
+export default {
+  components: {
+    patientSearch,
+    patientList
+  },
+  data() {
+    return {
+      token: '',
+      radios: [{ text: '全部', checked: true }, { text: '待看诊', checked: false }, { text: '时间', checked: false }],
+      medicalRecordData: [],
+      isEmpty: true,
+      pageInfo: {
+        pageNum: 1,
+        pageSize: 5,
+        doctorId: 1
+      }
+    };
+  },
+  onLoad() {
+    this.getPatientList();
+    // this.token = uni.getStorageSync('token');
+  },
+  async onPullDownRefresh() {
+    const res = await this.$http.post('/doctor/getPatients', this.pageInfo);
+    this.medicalRecordData = res.data.list;
+    if (res.code == 200) {
+      uni.stopPullDownRefresh();
+    }
+  },
+  onShow() {
+    this.getPatientList();
+    this.radios = [
+      { text: '全部', checked: true },
+      { text: '待看诊', checked: false },
+      { text: '时间', checked: false }
+    ];
+  },
+  methods: {
+    async radioClick(name) {
+      this.radios.map((item, index) => {
+        item.checked = index === name ? true : false;
+      });
+      console.log(name);
+      const { data: res } = await this.$http.post('/doctor/getPatientsByTagId', { ...this.pageInfo, tagId: name });
+      res.list.forEach(item => {
+        if (item.time == '0') {
+          item.time = '未入诊';
+        }
+      });
+      this.medicalRecordData = res.list;
     },
-    data() {
-      return {
-        
+    // 获取患者病历列表
+    async getPatientList() {
+      const { data: res } = await this.$http.post('/doctor/getPatients', this.pageInfo);
+      res.list.forEach(item => {
+        if (item.time == '0') {
+          item.time = '未入诊';
+        }
+      });
+
+      this.medicalRecordData = res.list;
+      if (res.list.length > 0) {
+        this.isEmpty = false;
       }
     },
-    methods: {
-      
+    // 处理搜索
+    handleSearch(res) {
+      this.medicalRecordData = res.list;
+    },
+    // 处理清空搜索
+    handleClear(res) {
+      this.medicalRecordData = res.list;
     }
   }
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -18,7 +18,8 @@ export default {
 /* 每个页面的公共css */
 @import url('/common/uni.css');
 @import url('/common/animate.css');
-
+/* 自定义图标 */
+@import url('/static/iconfont/iconfont.css');
 /* 公共样式库 */
 @import url('/common/common.css');
 /* 基础样式 */

@@ -6,13 +6,14 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "我的工作台"
+        "navigationBarTitleText": "我的工作台",
+        "enablePullDownRefresh": true
       }
     }, {
       "path": "pages/patient/patient",
       "style": {
         "navigationBarTitleText": "患者管理",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": true
       }
 
     }, {
@@ -22,6 +23,129 @@
         "enablePullDownRefresh": false
       }
 
+    }
+  ],
+  // "preloadRule": {
+  //   "pages/index/index": {
+  //     "packages": ["subpackage-index"],
+  //     "network": "all"
+  //   }
+  // },
+  "subPackages": [{
+      "root": "subpackage-patient",
+      "pages": [{
+        "path": "patient-detail/patient-detail",
+        "style": {
+          "navigationBarTitleText": "病历详情",
+          "enablePullDownRefresh": false
+        }
+
+      }, {
+        "path": "record-detail/record-detail",
+        "style": {
+          "navigationBarTitleText": "",
+          "enablePullDownRefresh": false
+        }
+
+      }]
+    },
+    {
+      "root": "subpackage-home",
+      "pages": [
+
+        {
+          "path": "orderAll/orderAll",
+          "style": {
+            "navigationBarTitleText": "全部订单",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "orderYu/orderYu",
+          "style": {
+            "navigationBarTitleText": "预约订单",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "orderIng/orderIng",
+          "style": {
+            "navigationBarTitleText": "进行中订单",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "orderFinish/orderFinish",
+          "style": {
+            "navigationBarTitleText": "完成订单",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "hospitalized/hospitalized",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "wallet/wallet",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "management/management",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "service/service",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "template/template",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "setting/setting",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "login/login",
+          "style": {
+            "navigationBarTitleText": "登录",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "setInfo/setInfo",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "loginByCode/loginByCode",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
+        }
+      ]
     }
   ],
   "tabBar": {
@@ -54,5 +178,19 @@
     "navigationBarTitleText": "神州牙都会医生端",
     "navigationBarBackgroundColor": "#55a2ef",
     "backgroundColor": "#fff"
+  },
+  "condition": { //模式配置，仅开发期间生效
+    "current": 0, //当前激活的模式(list 的索引项)
+    "list": [{
+        "name": "", //模式名称
+        "path": "pages/home/home", //启动页面，必选
+        "query": "" //启动参数，在页面的onLoad函数里面得到
+      },
+      {
+        "name": "", //模式名称
+        "path": "/subpackage-home/loginByCode/loginByCode", //启动页面，必选
+        "query": "" //启动参数，在页面的onLoad函数里面得到
+      }
+    ]
   }
 }
