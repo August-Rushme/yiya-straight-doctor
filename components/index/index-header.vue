@@ -1,7 +1,7 @@
 <template>
   <view>
     <view class="header">
-      <view class="onPatient m-2 border-radius-lg" :style="{ background: patientBackground }">
+      <view class="onPatient m-2" :style="{ background: patientBackground }">
         <text
           class="font-big p-status"
           @click="handlePatient"
@@ -23,7 +23,8 @@ export default {
         id: uni.getStorageSync('userInfo').id || 17,
         status: 0
       },
-      patientBackground: '#378bf9 url(../../static/img/接诊.png) no-repeat center',
+      patientBackground:
+        '#378bf9 url(https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/10.png) no-repeat center',
       fontColor: '',
       top: '110rpx',
       left: '260rpx',
@@ -49,7 +50,8 @@ export default {
             this.$u.toast('状态切换成功！');
             uni.setStorageSync('patientStatus', 1);
             this.patitentStatus = '下诊';
-            this.patientBackground = '#b24d4b url(../../static/img/11.png) no-repeat center';
+            this.patientBackground =
+              '#b24d4b url(https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/11.png) no-repeat center';
             this.fontColor = '#ffffff';
             this.top = '220rpx';
             this.left = '540rpx';
@@ -64,7 +66,8 @@ export default {
             uni.setStorageSync('patientStatus', 0);
 
             this.patitentStatus = '开诊';
-            this.patientBackground = '#378bf9 url(../../static/img/接诊.png) no-repeat center';
+            this.patientBackground =
+              '#378bf9 url(https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/10.png) no-repeat center';
             this.fontColor = '#f2feff';
             this.top = '110rpx';
             this.left = '260rpx';
@@ -84,6 +87,7 @@ export default {
   width: 710rpx;
   height: 350rpx;
   display: flex;
+  border-radius: 20rpx;
 }
 .p-status {
   color: #f2feff;

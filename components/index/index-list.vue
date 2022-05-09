@@ -58,8 +58,10 @@ export default {
       }
       const res = await this.$http.post('/doctor/receiveAppointment', {
         appointmentId: id,
-        clinic: '清合口腔',
-        clinicId: 1
+        clinic: uni.getStorageSync('userInfo').doctor.clinicName,
+        clinicId: uni.getStorageSync('userInfo').doctor.clinicId,
+        doctor: uni.getStorageSync('userInfo').name,
+        userId: uni.getStorageSync('userInfo').id
       });
       if (res.code !== 200) {
         return this.$u.toast('接单失败请稍后再试！');

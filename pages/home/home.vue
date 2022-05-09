@@ -21,19 +21,43 @@
       <text class="font-weight ml-3 ">我的订单</text>
       <view class="nav row a-center mt-2">
         <view class="navItem span-5" @click="goToAll">
-          <p><image src="../../static/img/全部订单.png" style="height: 60rpx;width: 60rpx;" mode=""></image></p>
+          <p>
+            <image
+              src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/%E5%85%A8%E9%83%A8%E8%AE%A2%E5%8D%95.png"
+              style="height: 60rpx;width: 60rpx;"
+              mode=""
+            ></image>
+          </p>
           <p>全部</p>
         </view>
         <view class="navItem span-5" @click="goToYu">
-          <p><image src="../../static/img/预约订单.png" style="height: 60rpx;width: 60rpx;" mode=""></image></p>
+          <p>
+            <image
+              src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/%E9%A2%84%E7%BA%A6%E8%AE%A2%E5%8D%95.png"
+              style="height: 60rpx;width: 60rpx;"
+              mode=""
+            ></image>
+          </p>
           <p>预约</p>
         </view>
         <view class="navItem span-5" @click="goToIng">
-          <p><image src="../../static/img/进行中订单.png" style="height: 60rpx;width: 60rpx;" mode=""></image></p>
+          <p>
+            <image
+              src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/%E8%BF%9B%E8%A1%8C%E4%B8%AD%E8%AE%A2%E5%8D%95.png"
+              style="height: 60rpx;width: 60rpx;"
+              mode=""
+            ></image>
+          </p>
           <p>进行中</p>
         </view>
         <view class="navItem span-5" @click="goToFinish">
-          <p><image src="../../static/img/已完成-订单.png" style="height: 60rpx;width: 60rpx;" mode=""></image></p>
+          <p>
+            <image
+              src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/%E5%B7%B2%E5%AE%8C%E6%88%90-%E8%AE%A2%E5%8D%95.png"
+              style="height: 60rpx;width: 60rpx;"
+              mode=""
+            ></image>
+          </p>
           <p>已完成</p>
         </view>
       </view>
@@ -62,32 +86,32 @@ export default {
       otherNav: [
         {
           name: '门店入驻',
-          src: '/static/img/Settled.png',
+          src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/Settled.png',
           pageName: 'hospitalized'
         },
         {
           name: '钱包',
-          src: '/static/img/wallet.png',
+          src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/wallet.png',
           pageName: 'wallet'
         },
         {
           name: '资质管理',
-          src: '/static/img/qualifications.png',
+          src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/qualifications.png',
           pageName: 'management'
         },
         {
           name: '客服',
-          src: '/static/img/server.png',
+          src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/server.png',
           pageName: 'service'
         },
         {
           name: '问诊模板',
-          src: '/static/img/Consultation.png',
+          src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/Consultation.png',
           pageName: 'template'
         },
         {
           name: '设置',
-          src: '/static/img/setInfo.png',
+          src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/setInfo.png',
           pageName: 'setting'
         }
       ]

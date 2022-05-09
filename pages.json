@@ -84,14 +84,14 @@
         }, {
           "path": "hospitalized/hospitalized",
           "style": {
-            "navigationBarTitleText": "",
+            "navigationBarTitleText": "门店入驻",
             "enablePullDownRefresh": false
           }
 
         }, {
           "path": "wallet/wallet",
           "style": {
-            "navigationBarTitleText": "",
+            "navigationBarTitleText": "钱包",
             "enablePullDownRefresh": false
           }
 
@@ -144,8 +144,40 @@
             "enablePullDownRefresh": false
           }
 
+        }, {
+          "path": "clinic-application/clinic-application",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
         }
       ]
+    },
+    {
+      "root": "subpackage-index",
+      "pages": [{
+        "path": "calendar/calendar",
+        "style": {
+          "navigationBarTitleText": "日程安排",
+          "enablePullDownRefresh": false
+        }
+
+      }, {
+        "path": "scheduleDetails/scheduleDetails",
+        "style": {
+          "navigationBarTitleText": "日程详情",
+          "enablePullDownRefresh": false
+        }
+
+      }, {
+        "path": "choosePatients/choosePatients",
+        "style": {
+          "navigationBarTitleText": "选择患者",
+          "enablePullDownRefresh": false
+        }
+
+      }]
     }
   ],
   "tabBar": {

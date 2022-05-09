@@ -2,7 +2,14 @@
   <view>
     <!-- 头部 -->
     <index-header></index-header>
-    <!--  <view class="font-lg ml-2" style="color: #666;">预约大厅</view> -->
+    <view class="" ></view>
+    <view class="registerIme d-flex j-sb pl-4 py-1 mt-5 mx-2 mb-2">
+      <view>
+        <view class="font-lg font-weight">日程安排</view>
+        <view class="imeBtn mt-2" @click="goCalendar">查看</view>
+      </view>
+      <image src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/calendar.png" mode="heightFix" class="img1"></image>
+    </view>
     <!-- 搜索区 -->
     <index-search
       pageName="index"
@@ -19,6 +26,7 @@
 import indexHeader from '@/components/index/index-header.vue';
 import indexSearch from '@/components/common/search.vue';
 import indexList from '@/components/index/index-list.vue';
+import { mapActions, mapState } from 'vuex';
 export default {
   components: { indexHeader, indexSearch, indexList },
   data() {
@@ -28,7 +36,9 @@ export default {
         pageSize: 5,
         query: ''
       },
-      appointmentList: []
+      appointmentList: [],
+      userInfo: uni.getStorageSync('userInfo'),
+      curDate: new Date()
     };
   },
   onLoad() {
@@ -72,6 +82,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getScheduleListAction']),
     // 获取预约订单列表
     async getAppointmentList() {
       const { data: res } = await this.$http.post('/patient/getPatient', this.pageInfo);
@@ -89,9 +100,61 @@ export default {
     reGetAppointment() {
       this.pageInfo = { pageNum: 1, pageSize: 4, query: '' };
       this.getAppointmentList();
+    },
+    goCalendar() {
+      uni.$u.route('/subpackage-index/calendar/calendar', {});
     }
   }
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.registerIme {
+  position: relative;
+  width: 700rpx;
+  height: 240rpx;
+  border-radius: 20rpx;
+  color: #eafefd;
+  background: linear-gradient(to right, #55a2ef, #378bf9);
+  box-shadow: 0rpx 0rpx 10rpx 4rpx #b2e5df;
+  .imeBtn {
+    width: 150rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    text-align: center;
+    border-radius: 30rpx;
+    color: #10c5a5;
+    background: linear-gradient(to bottom, #e8fefc, #bff8eb);
+  }
+}
+.img1 {
+  position: absolute;
+  height: 275rpx;
+  top: -15rpx;
+  right: 30rpx;
+}
+.img2 {
+  position: absolute;
+  height: 275rpx;
+  top: -15rpx;
+  right: 30rpx;
+}
+.registerApo {
+  position: relative;
+  width: 700rpx;
+  height: 240rpx;
+  border-radius: 20rpx;
+  color: #eafefd;
+  background: linear-gradient(to right, #92c7f8, #67a6ff);
+  box-shadow: 0rpx 0rpx 10rpx 4rpx #a4c5ea;
+  .imeBtn {
+    width: 150rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    text-align: center;
+    border-radius: 30rpx;
+    color: #6ea0e5;
+    background: linear-gradient(to bottom, #eaf2ff, #d3dffd);
+  }
+}
+</style>
