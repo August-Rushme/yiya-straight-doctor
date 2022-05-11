@@ -48,14 +48,12 @@ import {
   timeFormat,
   getRecentDay
 } from './util.js';
-import Ahh5Animated from '@/components/ahh5-animated/ahh5-animated';
 import dateTable from '@/components/luoxiao-dayTable/dayTable.vue';
 import { mapActions, mapState } from 'vuex';
 export default {
   name: 'sl-calendar',
   components: {
     dateTable,
-    Ahh5Animated
   },
   props: {
     /**

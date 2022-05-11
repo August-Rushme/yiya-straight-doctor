@@ -413,7 +413,7 @@ export default {
       if (this.isToday === 0) {
         let isOld = this.isOldtime(stId, id);
         if (isOld === -1) {
-          this.showError('过去时间不可预订');
+          this.showError('过去时间不可新建日程');
           timeOutEvent = 1;
           return;
         } else if (isOld > 0) {
@@ -810,6 +810,7 @@ export default {
     },
     //点击创建的会议移动中
     touchMeetingMove(e) {
+      console.log(e)
       let self = this;
       let y = e.changedTouches[0].clientY;
       let ny = y - self.meetingTouchStartY; //移动相对位移

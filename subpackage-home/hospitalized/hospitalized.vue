@@ -50,7 +50,7 @@
     <divider></divider>
 
     <block v-for="(item, index) in clinicList" :key="index">
-      <view class="goodsInfo d-flex flex-row m-2 a-center" @tap="goDetail">
+      <view class="goodsInfo d-flex flex-row m-2 a-center">
         <u-image :showLoading="true" :src="item.img" width="70px" height="70px"></u-image>
         <view class="infoText flex-column mx-2">
           <text class="font-weight font-md">{{ item.name }}</text>
@@ -60,6 +60,9 @@
           <block v-for="(item2, index2) in item.newScope" :key="index2">
             <text style="border: #F0AD4E solid 1px; color: #E45656;" class="px-1 mr-1">{{ item2 }}</text>
           </block>
+        </view>
+        <view class="position-absolute" style="right: 20rpx;">
+          <u-button type="primary" text="申请入驻" size="mini" @click="goAttestation"></u-button>
         </view>
       </view>
       <divider></divider>
@@ -74,12 +77,33 @@ export default {
       clinicList: [],
       pageInfo: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 5
       }
     };
   },
   onShow() {
+    this.pageInfo = {
+      pageNum: 1,
+      pageSize: 5
+    };
     this.getClinicList();
+  },
+  async onReachBottom() {
+    this.pageInfo.pageNum++;
+    uni.showLoading({
+      title: '加载中'
+    });
+    const { data: res } = await this.$http.post('/doctor/getClinicList', this.pageInfo);
+    if (res.list.length > 0) {
+      uni.hideLoading();
+      this.clinicList.push(...res.list);
+    } else {
+      uni.hideLoading();
+      uni.showToast({
+        title: '没有更多数据了',
+        icon: 'none'
+      });
+    }
   },
   methods: {
     // 获取诊所列表
@@ -93,8 +117,8 @@ export default {
         status: type
       });
     },
-    goDetail() {
-      console.log(111);
+    goAttestation() {
+      uni.$u.route('/subpackage-home/entry-attestation/entry-attestation');
     }
   }
 };

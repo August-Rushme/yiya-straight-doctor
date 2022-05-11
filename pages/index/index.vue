@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <index-header></index-header>
     <view class="" ></view>
-    <view class="registerIme d-flex j-sb pl-4 py-1 mt-5 mx-2 mb-2">
+    <view class="registerApo d-flex j-sb pl-4 py-1 mt-5 mx-2 mb-2">
       <view>
         <view class="font-lg font-weight">日程安排</view>
         <view class="imeBtn mt-2" @click="goCalendar">查看</view>

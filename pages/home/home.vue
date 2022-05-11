@@ -1,6 +1,7 @@
 <template>
   <view class="a">
     <!-- 顶部登录 -->
+  <!--  <view class=" " @click="handleApplyDetail">aaaa</view> -->
     <view class="top-background  d-flex j-center">
       <view class="my-card d-flex j-sb a-center px-4">
         <view class="userInfo d-flex">
@@ -110,10 +111,10 @@ export default {
           pageName: 'template'
         },
         {
-          name: '设置',
+          name: '系统设置',
           src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/setInfo.png',
           pageName: 'setting'
-        }
+        },
       ]
     };
   },
@@ -124,6 +125,9 @@ export default {
     this.token = uni.getStorageSync('token');
   },
   methods: {
+    goAttestation() {
+      uni.$u.route('/subpackage-home/entry-attestation/entry-attestation');
+    },
     goToAll() {
       uni.$u.route('/subpackage-home/orderAll/orderAll');
     },
@@ -140,6 +144,11 @@ export default {
     gotoLogin() {
       uni.navigateTo({
         url: '/subpackage-home/login/login'
+      });
+    },
+    handleApplyDetail() {
+      uni.$u.route('/subpackage-home/applyDetail/applyDetail', {
+        status: this.status
       });
     },
     // 设置个人信息

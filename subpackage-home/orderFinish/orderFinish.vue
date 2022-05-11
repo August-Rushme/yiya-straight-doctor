@@ -67,7 +67,8 @@ export default {
       pageInfo: {
         pageNum: 1,
         pageSize: 5,
-        userId: ''
+        userId: '',
+        status: 2
       },
       doctor: '',
       clinic: ''

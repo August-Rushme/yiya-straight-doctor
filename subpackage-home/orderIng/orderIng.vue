@@ -67,7 +67,8 @@ export default {
       pageInfo: {
         pageNum: 1,
         pageSize: 5,
-        userId: ''
+        userId: '',
+        status: 1
       },
       doctor: '',
       clinic: ''
@@ -75,11 +76,11 @@ export default {
   },
 
   onShow() {
-   this.userInfo = uni.getStorageSync('userInfo');
-   this.pageInfo.userId = this.userInfo.id;
-   this.doctor = this.userInfo.name;
-   this.clinic = this.userInfo.doctor.clinicName;
-   this.getOrderList();
+    this.userInfo = uni.getStorageSync('userInfo');
+    this.pageInfo.userId = this.userInfo.id;
+    this.doctor = this.userInfo.name;
+    this.clinic = this.userInfo.doctor.clinicName;
+    this.getOrderList();
   },
   methods: {
     async getOrderList() {
