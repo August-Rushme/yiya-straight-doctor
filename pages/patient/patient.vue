@@ -9,16 +9,23 @@
         @clearHandler="handleClear"
       ></patient-search>
       <!-- 标签区域 -->
-      <view class="d-flex j-start mt-2">
-        <view v-for="(item, index) in radios" :key="index" class="px-2">
-          <u-tag
-            :text="item.text"
-            :plain="!item.checked"
-            borderColor="#f5f5f5"
-            color="#333333"
-            :name="index"
-            @click="radioClick"
-          ></u-tag>
+      <view class="d-flex mt-2 j-sb">
+        <view class="d-flex j-start">
+          <block v-for="(item, index) in radios" :key="index">
+            <view class="px-2">
+              <u-tag
+                :text="item.text"
+                :plain="!item.checked"
+                borderColor="#f5f5f5"
+                color="#333333"
+                :name="index"
+                @click="radioClick"
+              ></u-tag>
+            </view>
+          </block>
+        </view>
+        <view class="mr-3">
+          <u-button type="primary" size="mini" icon="plus" @click="handleNewPatient">新建患者</u-button>
         </view>
       </view>
       <!-- 病历区域 -->
@@ -94,6 +101,10 @@ export default {
       if (res.list.length > 0) {
         this.isEmpty = false;
       }
+    },
+    // 新建患者
+    handleNewPatient() {
+      uni.$u.route('/subpackage-patient/new-patient/new-patient');
     },
     // 处理搜索
     handleSearch(res) {
