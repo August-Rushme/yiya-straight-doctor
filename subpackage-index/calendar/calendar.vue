@@ -290,6 +290,9 @@ export default {
 
           &.active {
             //选中
+			display: flex;
+            align-items: center;
+			justify-content: center;
             background: #578bff;
             color: white;
           }

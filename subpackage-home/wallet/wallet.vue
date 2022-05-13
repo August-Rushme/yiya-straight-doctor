@@ -164,6 +164,7 @@ export default {
   .recharge {
     position: relative;
     width: 320rpx;
+	border-radius: 20rpx;
     background: linear-gradient(to right, #88d1f1, #55a2ef);
     box-shadow: 0rpx 0rpx 8rpx 2rpx #77c1f0;
     .toRecharge {

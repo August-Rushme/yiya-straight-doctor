@@ -1,16 +1,5 @@
 {
-    "id": "sl-periodpicker",
-    "name": "sl-periodpicker 分时段选择器",
-    "version": "1.0.3",
-    "description": "可视化的分时段选择器。主要应用在分时段相关产品，如电商行业的分时段出价、分时段销售、分时段营销，办公领域的分时段日程表、会议室的分时段预约，交通安全行业的分时段限行，广告行业的分时段竞价",
-    "keywords": [
-        "分时段",
-        "时间"
-    ],
-    "dcloudext": {
-        "category": [
-            "前端组件",
-            "通用组件"
-        ]
-    }
+  "dependencies": {
+    "goeasy": "^2.4.3"
+  }
 }

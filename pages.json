@@ -187,7 +187,16 @@
           }
 
         }
-      ]
+          ,{
+                    "path" : "chat/chat",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
     },
     {
       "root": "subpackage-index",
