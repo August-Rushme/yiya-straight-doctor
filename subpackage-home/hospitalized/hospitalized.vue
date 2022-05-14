@@ -62,7 +62,7 @@
           </block>
         </view>
         <view class="position-absolute" style="right: 20rpx;">
-          <u-button type="primary" text="申请入驻" size="mini" @click="goAttestation"></u-button>
+          <u-button type="primary" text="申请入驻" size="mini" @click="goAttestation(item.name)"></u-button>
         </view>
       </view>
       <divider></divider>
@@ -117,8 +117,8 @@ export default {
         status: type
       });
     },
-    goAttestation() {
-      uni.$u.route('/subpackage-home/entry-attestation/entry-attestation');
+    goAttestation(name) {
+      uni.$u.route('/subpackage-home/entry-attestation/entry-attestation', { clinic: name });
     }
   }
 };

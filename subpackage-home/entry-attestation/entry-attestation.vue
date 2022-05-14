@@ -4,8 +4,8 @@
 
     <view class="form mx-3">
       <u--form labelPosition="left" :model="attestationInfo" :rules="rules" ref="formRef">
-        <u-form-item label="姓名:" prop="name" borderBottom>
-          <u--input v-model="attestationInfo.name" placeholder="请输入姓名" border="none"></u--input>
+        <u-form-item label="姓名:" prop="userName" borderBottom>
+          <u--input v-model="attestationInfo.userName" placeholder="请输入姓名" border="none"></u--input>
         </u-form-item>
         <u-form-item
           label="性别:"
@@ -49,14 +49,14 @@
         <u-form-item label="手机号码:" labelWidth="150rpx" prop="phone" borderBottom>
           <u--input v-model="attestationInfo.phone" placeholder="请输入手机号" border="none"></u--input>
         </u-form-item>
-        <u-form-item label="执业时长:" labelWidth="150rpx" prop="workTime" borderBottom>
-          <u--input v-model="attestationInfo.workTime" placeholder="请输入执业时长" border="none"></u--input>
+        <u-form-item label="执业时长:" labelWidth="150rpx" prop="practiceDuration" borderBottom>
+          <u--input v-model="attestationInfo.practiceDuration" placeholder="请输入执业时长" border="none"></u--input>
         </u-form-item>
         <u-form-item label="身份证号:" labelWidth="150rpx" prop="idNumber" borderBottom>
           <u--input v-model="attestationInfo.idNumber" placeholder="请输入身份证号" border="none"></u--input>
         </u-form-item>
-        <u-form-item label="操作项目:" labelWidth="150rpx" prop="project" borderBottom>
-          <u-checkbox-group v-model="attestationInfo.project" shape="square" @change="change">
+        <u-form-item label="操作项目:" labelWidth="150rpx" prop="skills" borderBottom>
+          <u-checkbox-group v-model="attestationInfo.skills" shape="square" @change="change">
             <view class="d-flex flex-wrap mt-1">
               <u-checkbox
                 :customStyle="{ marginRight: '20rpx', marginBottom: '12rpx' }"
@@ -71,7 +71,7 @@
       </u--form>
       <view class="" style="margin-left: 100rpx; margin-top: 50rpx;">
         <u-upload
-          :fileList="fileList1"
+          :fileList="fileList6"
           @afterRead="afterRead"
           @delete="deletePic"
           name="6"
@@ -79,6 +79,7 @@
           :maxCount="1"
           width="250"
           height="150"
+          :previewFullImage="true"
         >
           <image
             src="https://cdn.uviewui.com/uview/demo/upload/positive.png"
@@ -111,57 +112,41 @@
 </template>
 <script>
 export default {
+  onLoad(option) {
+    this.attestationInfo.clinic = option.clinic;
+  },
+  async onShow() {
+    const { data: res } = await this.$http.get('/qualification/getDoctorLabels');
+    this.checkboxList = res.map(item => {
+      return {
+        name: item.label,
+        disabled: false,
+        label: item.id
+      };
+    });
+  },
   data() {
     return {
       attestationInfo: {
-        name: '',
+        userName: '',
         age: '',
         gender: '',
         birthday: '',
-        workTime: '',
+        practiceDuration: '',
         idNumber: '',
-        project: [],
-        nvqImg: '',
-        phone: ''
+        skills: [],
+        certificate: '',
+        phone: '',
+        clinic: '',
+        userId: uni.getStorageSync('userInfo').id
       },
       showSex: false,
       showBirthday: false,
       birthday: Number(new Date()),
-      checkboxList: [
-        {
-          name: '牙齿美白',
-          disabled: false,
-          label: 1
-        },
-        {
-          name: '普通种植',
-          disabled: false,
-          label: 2
-        },
-        {
-          name: '根管治疗',
-          disabled: false,
-          label: 3
-        },
-        {
-          name: '微创种植牙',
-          disabled: false,
-          label: 4
-        },
-        {
-          name: '拔智齿',
-          disabled: false,
-          label: 5
-        },
-        {
-          name: '儿童拔牙',
-          disabled: false,
-          label: 6
-        }
-      ],
+      checkboxList: [],
       fileList6: [],
       rules: {
-        name: [
+        userName: [
           {
             type: 'string',
             required: true,
@@ -200,7 +185,7 @@ export default {
             trigger: ['change', 'blur']
           }
         ],
-        workTime: {
+        practiceDuration: {
           type: 'string',
           required: true,
           message: '请输入执业时长',
@@ -223,7 +208,7 @@ export default {
             trigger: ['change', 'blur']
           }
         ],
-        project: {
+        skills: {
           type: 'array',
           min: 2,
           required: true,
@@ -246,6 +231,17 @@ export default {
     this.$refs.formRef.setRules(this.rules);
   },
   methods: {
+    // 计算年龄
+    getAge(birthday) {
+      var today = new Date();
+      var birthDate = new Date(birthday);
+      var age = today.getFullYear() - birthDate.getFullYear();
+      var m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    },
     // 选择性别
     sexSelect(e) {
       this.attestationInfo.gender = e.name;
@@ -260,7 +256,9 @@ export default {
     },
     birthdayConfirm(e) {
       this.showBirthday = false;
-      this.attestationInfo.birthday = uni.$u.timeFormat(e.value, 'yyyy-mm-dd');
+      const birthday = uni.$u.timeFormat(e.value, 'yyyy-mm-dd');
+      this.attestationInfo.birthday = birthday;
+      this.attestationInfo.age = this.getAge(birthday);
       this.$refs.formRef.validateField('birthday');
     },
     // 选择
@@ -299,15 +297,22 @@ export default {
       this[`fileList${event.name}`].splice(event.index, 1);
     },
     uploadFilePromise(url) {
+      let _this = this;
       return new Promise((resolve, reject) => {
         let a = uni.uploadFile({
-          url: 'http://www.example.com/upload', // 仅为示例，非真实的接口地址
+          url: 'http://127.0.0.1:8081/qualification/upload',
           filePath: url,
           name: 'file',
           formData: {
-            user: 'test'
+            token: uni.getStorageSync('token')
           },
           success: res => {
+            console.log(JSON.parse(res.data));
+            let data = JSON.parse(res.data);
+            _this.attestationInfo.certificate = data.data;
+            console.log(_this.attestationInfo);
+            console.log(_this);
+            console.log(_this.attestationInfo.certificate);
             setTimeout(() => {
               resolve(res.data.data);
             }, 1000);
@@ -320,18 +325,29 @@ export default {
 
       this.$refs.formRef
         .validate()
-        .then(res => {
+        .then(async res => {
           if (this.fileList6.length == 0) {
             return uni.$u.toast('请上传医师资格证');
           }
-          uni.$u.toast('校验通过');
+          console.log(this.attestationInfo);
+          const data = await this.$http.post('/qualification/authentication', this.attestationInfo);
+          if (data.code !== 200) {
+            return uni.$u.toast('上传信息失败，请稍后再试');
+          }
+          uni.$u.toast('上传信息成功，请等待审核');
+          setTimeout(() => {
+            uni.$u.route({
+              url: '/subpackage-home/hospitalized/hospitalized',
+              type: 'redirect'
+            });
+          }, 400);
         })
         .catch(errors => {
           uni.$u.toast('校验失败');
         });
     },
     reset() {
-      const validateList = ['name', 'gender', 'birthday', 'workTime', 'idNumber', 'project'];
+      const validateList = ['name', 'gender', 'birthday', 'practiceDuration', 'idNumber', 'skills'];
       this.$refs.formRef.resetFields();
       // 清空表单
       for (let key in this.attestationInfo) {
