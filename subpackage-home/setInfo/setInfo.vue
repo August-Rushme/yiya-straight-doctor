@@ -7,7 +7,7 @@
         style="width: 100rpx;height: 100rpx; border-radius: 50%;"
       ></image>
       <view class="user-name">
-        <span>August</span>
+        <span>李满元</span>
         <br />
         <span class="user-other">用户编号：8888 8888</span>
       </view>
@@ -15,7 +15,7 @@
     <divider></divider>
     <u-cell-group :border="false">
       <u-cell title="诊所" value="海南清河口腔" icon="home" :title-width="180" :arrow="false"></u-cell>
-      <u-cell title="年龄" value="32岁" icon="account" :title-width="180" :arrow="false"></u-cell>
+      <u-cell title="年龄" value="38岁" icon="account" :title-width="180" :arrow="false"></u-cell>
       <u-cell title="性别" value="男" icon="man" :title-width="180" :arrow="false"></u-cell>
       <u-cell title="手机" class="connect" value="13898987878" icon="phone" :title-width="180" :arrow="false"></u-cell>
       <u-cell

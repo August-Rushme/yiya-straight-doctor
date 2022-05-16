@@ -49,27 +49,8 @@
         <u-form-item label="手机号码:" labelWidth="150rpx" prop="phone" borderBottom>
           <u--input v-model="patientInfo.phone" placeholder="请输入手机号" border="none"></u--input>
         </u-form-item>
-        <u-form-item label="预约项目:" labelWidth="150rpx" borderBottom>
-          <u--input v-model="patientInfo.project" placeholder="请输入预约项目" border="none"></u--input>
-        </u-form-item>
-        <u-form-item
-          label="预约时间:"
-          prop=""
-          labelWidth="80"
-          borderBottom
-          @click="
-            showCalendar = true;
-            hideKeyboard();
-          "
-        >
-          <u--input
-            v-model="patientInfo.appoinmentTime"
-            disabled
-            disabledColor="#ffffff"
-            placeholder="请选择预约时间"
-            border="none"
-          ></u--input>
-          <u-icon slot="right" name="arrow-right"></u-icon>
+        <u-form-item label="预约单号:" labelWidth="150rpx" prop="orderNumber" borderBottom>
+          <u--input v-model="patientInfo.orderNumber" placeholder="请输入预约单号" border="none"></u--input>
         </u-form-item>
       </u--form>
       <u-button type="primary" text="提交" customStyle="margin-top: 50px" @click="submit"></u-button>
@@ -91,16 +72,6 @@
         @cancel="birthdayClose"
         @close="birthdayClose"
       ></u-datetime-picker>
-      <u-datetime-picker
-        :show="showCalendar"
-        :value="appointmentTime"
-        mode="datetime"
-        :filter="filter"
-        closeOnClickOverlay
-        @confirm="appointmentConfirm"
-        @cancel="appointmentClose"
-        @close="appointmentClose"
-      ></u-datetime-picker>
     </view>
   </view>
 </template>
@@ -113,9 +84,9 @@ export default {
         age: '',
         gender: '',
         birthday: '',
-        appoinmentTime: '',
-        project: '',
-        phone: ''
+        phone: '',
+        orderNumber: '',
+        doctorId: uni.getStorageSync('userInfo').doctor.id
       },
       showSex: false,
       showBirthday: false,
@@ -162,35 +133,11 @@ export default {
             trigger: ['change', 'blur']
           }
         ],
-        workTime: {
+        orderNumber: {
           type: 'string',
           required: true,
-          message: '请输入执业时长',
+          message: '请选输入预约单号',
           trigger: ['change', 'blur']
-        },
-        idNumber: [
-          {
-            type: 'string',
-            required: true,
-            message: '请输入身份证号',
-            trigger: ['blur']
-          },
-          {
-            // 此为同步验证，可以直接返回true或者false
-            validator: (rule, value, callback) => {
-              return uni.$u.test.idCard(value);
-            },
-            message: '身份证号码不正确',
-            // 触发器可以同时用blur和change，二者之间用英文逗号隔开
-            trigger: ['change', 'blur']
-          }
-        ],
-        project: {
-          type: 'array',
-          min: 2,
-          required: true,
-          message: '至少选两项',
-          trigger: ['change']
         }
       },
       actions: [
@@ -250,8 +197,12 @@ export default {
 
       this.$refs.formRef
         .validate()
-        .then(res => {
-          uni.$u.toast('校验通过');
+        .then(async res => {
+          const data = await this.$http.post('/patient/addPatient', this.patientInfo);
+          if (data.code !== 200) {
+            return uni.$u.toast('添加失败，请稍后再试');
+          }
+          uni.$u.toast('添加成功');
         })
         .catch(errors => {
           uni.$u.toast('校验失败');

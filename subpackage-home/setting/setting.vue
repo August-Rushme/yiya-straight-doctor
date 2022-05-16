@@ -9,7 +9,9 @@
       <u-cell title="用户协议" @click="navTo('')" :isLink="true"></u-cell>
     </u-cell-group>
     <divider></divider>
-    <view class="mt-3"><u-button class="sign-out" @click="logout" :hair-line="false">退出登录</u-button></view>
+    <view class="mt-3 mx-2">
+      <u-button class="sign-out" type="primary" @click="logout" :hair-line="false">退出登录</u-button>
+    </view>
   </view>
 </template>
 <script>
@@ -43,17 +45,13 @@ export default {
       // #endif
     },
     logout() {
-      this.$u.api.logout().then(res => {
-        this.$u.toast(res.msg);
-        if (res.code == '200') {
-          let self = this;
-          setTimeout(() => {
-            uni.reLaunch({
-              url: '/pages/sys/login/index'
-            });
-          }, 500);
-        }
-      });
+      uni.clearStorageSync();
+      setTimeout(() => {
+        uni.$u.route({
+          url: '/subpackage-home/login/login',
+          type: 'reLaunch'
+        });
+      }, 500);
     }
   }
 };

@@ -173,30 +173,21 @@
           }
 
         }, {
-          "path": "switchAccount/switchAccount",
-          "style": {
-            "navigationBarTitleText": "",
-            "enablePullDownRefresh": false
-          }
-
-        }, {
           "path": "currency/currency",
           "style": {
             "navigationBarTitleText": "通用",
             "enablePullDownRefresh": false
           }
 
+        }, {
+          "path": "chat/chat",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+
         }
-          ,{
-                    "path" : "chat/chat",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+      ]
     },
     {
       "root": "subpackage-index",

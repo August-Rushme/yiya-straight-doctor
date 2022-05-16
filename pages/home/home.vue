@@ -1,14 +1,14 @@
 <template>
   <view class="a">
     <!-- 顶部登录 -->
-  <!--  <view class=" " @click="handleApplyDetail">aaaa</view> -->
+    <!--  <view class=" " @click="handleApplyDetail">aaaa</view> -->
     <view class="top-background  d-flex j-center">
       <view class="my-card d-flex j-sb a-center px-4">
         <view class="userInfo d-flex">
           <u-avatar :src="avatar" size="50"></u-avatar>
           <view class="username ml-1 pt-1">
             <text class="line-h0 font-md font-weight">{{ username }}</text>
-            <view class="" @click="goSetInfo">未认证用户 ></view>
+            <view class="font-md font-weight" @click="goSetInfo">{{ userInfo.name }}</view>
           </view>
         </view>
         <template v-if="!token">
@@ -83,6 +83,8 @@ export default {
   components: {},
   data() {
     return {
+      userInfo: uni.getStorageSync('userInfo') ?? '',
+      avatar: uni.getStorageSync('userInfo').photo,
       token: '',
       otherNav: [
         {
@@ -114,7 +116,7 @@ export default {
           name: '系统设置',
           src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/setInfo.png',
           pageName: 'setting'
-        },
+        }
       ]
     };
   },

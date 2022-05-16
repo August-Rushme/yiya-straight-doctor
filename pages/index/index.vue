@@ -41,6 +41,9 @@ export default {
       curDate: new Date()
     };
   },
+  computed:{
+     ...mapState(['forcedLogin','hasLogin'])
+  },
   onLoad() {
     this.getAppointmentList();
   },

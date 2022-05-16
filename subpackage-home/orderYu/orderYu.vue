@@ -39,7 +39,18 @@
             </view>
             <view class="name d-flex j-sb a-center pb-1 mt-1 pr-2 border-bottom">
               <view class="label">单号:</view>
-              <text>{{ item.orderNumber }}</text>
+              <view class="d-flex">
+                <text class="mr-2 d-flex font-md a-center ">{{ item.orderNumber }}</text>
+                <view
+                  class="copyBtn border a-center pl-1"
+                  hover-class="cellhover"
+                  style="width: 80rpx;height: 50rpx; border-radius:10rpx;padding-top: 5rpx;"
+                  :hover-stay-time="200"
+                  @click="copyOrderNumber(item.orderNumber)"
+                >
+                  <text class="" style="color: #666;">复制</text>
+                </view>
+              </view>
             </view>
             <view class="name d-flex j-sb a-center border-bottom pb-1 mt-2 pr-2">
               <view class="info d-flex j-start">
@@ -86,9 +97,26 @@ export default {
     async getOrderList() {
       const { data: res } = await this.$http.post('/order/getOrderByStatus', this.pageInfo);
       this.orderList = res.list;
+    },
+    // 复制单号
+    copyOrderNumber(orderNumber) {
+      uni.setClipboardData({
+        data: orderNumber.toString(),
+        success: function() {
+          uni.$u.toast('复制成功');
+          console.log('success');
+        }
+      });
     }
   }
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.copyBtn {
+  background-color: #f8f8f8;
+}
+.cellhover {
+  background-color: #dedede;
+}
+</style>

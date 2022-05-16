@@ -109,6 +109,10 @@ export default {
       uni.$u.route('/subpackage-home/applyDetail/applyDetail', {
         status: status
       });
+    },
+    // 获取申请数据
+    getApplyData() {
+      this.$http.get('/');
     }
   }
 };

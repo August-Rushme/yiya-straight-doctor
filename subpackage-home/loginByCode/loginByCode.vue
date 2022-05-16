@@ -105,12 +105,12 @@ export default {
       } else {
         uni.$u.toast('登录成功');
         uni.setStorageSync('userInfo', res.data);
-		uni.setStorageSync('username', res.data.nickname ?  res.data.nickname : '神都会医生' );
-		uni.setStorageSync('avatar',res.data.photo ? res.data.photo : 'https://img0.baidu.com/it/u=1329736176,2242376820&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
         uni.setStorageSync('token', res.token);
-        uni.switchTab({
-          url: '/pages/home/home'
-        });
+        setTimeout(() => {
+          uni.switchTab({
+            url: '/pages/home/home'
+          });
+        }, 300);
       }
     }
   }

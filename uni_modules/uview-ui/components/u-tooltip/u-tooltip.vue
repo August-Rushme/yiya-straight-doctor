@@ -258,11 +258,11 @@
 				// #ifndef H5
 				uni.setClipboardData({
 					// 优先使用copyText字段，如果没有，则默认使用text字段当做复制的内容
-					data: this.copyText || this.text,
+					data: this.copyText.toString() || this.text.toString(),
 					success: () => {
 						this.showToast && uni.$u.toast('复制成功')
 					},
-					fail: () => {
+					fail: (res) => {
 						this.showToast && uni.$u.toast('复制失败')
 					},
 					complete: () => {

@@ -82,7 +82,7 @@
           :previewFullImage="true"
         >
           <image
-            src="https://cdn.uviewui.com/uview/demo/upload/positive.png"
+            src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/idCard.png"
             mode="widthFix"
             style="width: 250px;height: 150px;"
           ></image>
