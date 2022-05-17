@@ -203,6 +203,10 @@ export default {
             return uni.$u.toast('添加失败，请稍后再试');
           }
           uni.$u.toast('添加成功');
+          // 清空表单
+          for (let key in this.patientInfo) {
+            this.patientInfo[key] = '';
+          }
         })
         .catch(errors => {
           uni.$u.toast('校验失败');

@@ -47,7 +47,7 @@
             <view class="reason" v-if="status == 1">
               <view class="name d-flex j-sb a-center pb-1  pr-2 px-3">
                 <view class="label">驳回原因:</view>
-                <text style="color: #939393;">牙齿美白，普通种植，根管治疗</text>
+                <text style="color: #939393;">不会符合本诊所要求</text>
               </view>
             </view>
           </image>

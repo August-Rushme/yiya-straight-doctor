@@ -14,7 +14,7 @@
 
         <view class="d-flex j-sb a-center">
           <text class="font-weight money">2120</text>
-          <view class="set-wallet">完善钱包</view>
+          <view class="set-wallet" @click="waitting">完善钱包</view>
         </view>
       </view>
     </view>
@@ -23,7 +23,7 @@
       <view class="p-2 recharge">
         <view>
           <view class="font-md font-weight">钱包充值</view>
-          <view class="toRecharge">去充值 ></view>
+          <view class="toRecharge" @click="waitting">去充值 ></view>
         </view>
         <image
           src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/wallet3.png"
@@ -34,7 +34,7 @@
       <view class="p-2 withdrawal">
         <view>
           <view class="font-md font-weight">钱包提现</view>
-          <view class="toWithdrawal">去提现 ></view>
+          <view class="toWithdrawal" @click="waitting">去提现 ></view>
         </view>
         <image
           src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/money.png"
@@ -99,7 +99,11 @@ export default {
       ]
     };
   },
-  methods: {}
+  methods: {
+    waitting() {
+      uni.$u.toast('功能待完善');
+    }
+  }
 };
 </script>
 
@@ -164,7 +168,7 @@ export default {
   .recharge {
     position: relative;
     width: 320rpx;
-	border-radius: 20rpx;
+    border-radius: 20rpx;
     background: linear-gradient(to right, #88d1f1, #55a2ef);
     box-shadow: 0rpx 0rpx 8rpx 2rpx #77c1f0;
     .toRecharge {

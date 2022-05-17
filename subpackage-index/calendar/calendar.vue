@@ -24,9 +24,9 @@
     <view class="" style="margin-top: 300rpx;" v-if="newList.length == 0">
       <u-loading-icon mode="circle" text="加载中"></u-loading-icon>
     </view>
-    <swiper :current="active" style="height: 1370rpx; margin-bottom: 20rpx;" @change="handleChangeTab">
+    <swiper :current="active" style="height: 1300rpx; margin-bottom: 20rpx;" @change="handleChangeTab">
       <swiper-item v-for="(item, index) in newList" :key="index">
-        <scroll-view scroll-y="true" style="height: 1370rpx;" enable-flex>
+        <scroll-view scroll-y="true" style="height: 1300rpx;" enable-flex>
           <date-table
             v-on:bookMeeting="bookMeeting($event)"
             :chooseDateProp="curDate"

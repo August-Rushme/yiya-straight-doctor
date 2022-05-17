@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="medicalRecord border mt-2">
+    <view class="medicalRecord  mt-2">
       <uni-section title="我的预约" type="line">
         <block v-for="(item, index) in medicalRecordData" :key="index">
           <uni-card @click="handlePatientClick(item.id, item.appointmentId)">

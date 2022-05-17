@@ -1,7 +1,7 @@
 <template>
   <view class="parient">
     <u-empty mode="data" icon="http://cdn.uviewui.com/uview/empty/data.png" title="数据为空" v-if="isEmpty"></u-empty>
-    <view class="content" v-if="!isEmpty">
+    <view class="content-patient" v-if="!isEmpty">
       <patient-search
         placeholder="姓名"
         pageName="patient"
@@ -50,7 +50,7 @@ export default {
       isEmpty: true,
       pageInfo: {
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 6,
         doctorId: 1
       }
     };
@@ -60,14 +60,58 @@ export default {
     // this.token = uni.getStorageSync('token');
   },
   async onPullDownRefresh() {
+    this.pageInfo = {
+      pageNum: 1,
+      pageSize: 6,
+      doctorId: 1
+    };
     const res = await this.$http.post('/doctor/getPatients', this.pageInfo);
+    res.data.list.forEach(item => {
+      if (item.time == '0') {
+        item.time = '未入诊';
+      }
+    });
+
     this.medicalRecordData = res.data.list;
     if (res.code == 200) {
       uni.stopPullDownRefresh();
     }
+    if (res.data.list.length > 0) {
+      this.isEmpty = false;
+    }
+  },
+  async onReachBottom() {
+    this.pageInfo.pageNum++;
+    uni.showLoading({
+      title: '加载中'
+    });
+    const { data: res } = await this.$http.post('/doctor/getPatients', this.pageInfo);
+    if (res.list.length > 0) {
+      this.isEmpty = false;
+    }
+    res.list.forEach(item => {
+      if (item.time == '0') {
+        item.time = '未入诊';
+      }
+    });
+    if (res.list.length > 0) {
+      uni.hideLoading();
+      this.medicalRecordData.push(...res.list);
+    } else {
+      uni.hideLoading();
+      uni.showToast({
+        title: '没有更多数据了',
+        icon: 'none'
+      });
+    }
   },
   onShow() {
     this.getPatientList();
+    this.pageInfo = {
+      pageNum: 1,
+      pageSize: 6,
+      doctorId: 1
+    };
     this.radios = [
       { text: '全部', checked: true },
       { text: '待看诊', checked: false },
@@ -79,13 +123,20 @@ export default {
       this.radios.map((item, index) => {
         item.checked = index === name ? true : false;
       });
-      console.log(name);
+      this.pageInfo = {
+        pageNum: 1,
+        pageSize: 6,
+        doctorId: 1
+      };
       const { data: res } = await this.$http.post('/doctor/getPatientsByTagId', { ...this.pageInfo, tagId: name });
       res.list.forEach(item => {
         if (item.time == '0') {
           item.time = '未入诊';
         }
       });
+      if (res.list.length > 0) {
+        this.isEmpty = false;
+      }
       this.medicalRecordData = res.list;
     },
     // 获取患者病历列表
@@ -108,10 +159,20 @@ export default {
     },
     // 处理搜索
     handleSearch(res) {
+      res.list.forEach(item => {
+        if (item.time == '0') {
+          item.time = '未入诊';
+        }
+      });
       this.medicalRecordData = res.list;
     },
     // 处理清空搜索
     handleClear(res) {
+      res.list.forEach(item => {
+        if (item.time == '0') {
+          item.time = '未入诊';
+        }
+      });
       this.medicalRecordData = res.list;
     }
   }

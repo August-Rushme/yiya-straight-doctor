@@ -3,7 +3,7 @@
     <view class="list-cell">
       <image
         class="user-images"
-        src="https://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEJsAibhKl94xrSQVNECeRk35s4AZB5wk6U9SwmQPzRTnCuEwiaRjCsA1BBwwKic2jtO9PCUG9icFqznjQ/132"
+        src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/doctor-man.png"
         style="width: 100rpx;height: 100rpx; border-radius: 50%;"
       ></image>
       <view class="user-name">
@@ -17,11 +17,11 @@
       <u-cell title="诊所" value="海南清河口腔" icon="home" :title-width="180" :arrow="false"></u-cell>
       <u-cell title="年龄" value="38岁" icon="account" :title-width="180" :arrow="false"></u-cell>
       <u-cell title="性别" value="男" icon="man" :title-width="180" :arrow="false"></u-cell>
-      <u-cell title="手机" class="connect" value="13898987878" icon="phone" :title-width="180" :arrow="false"></u-cell>
+      <u-cell title="手机" class="connect" value="18976329982" icon="phone" :title-width="180" :arrow="false"></u-cell>
       <u-cell
         title="邮箱"
         class="connect"
-        value="upugpbvrtge@188.com"
+        value="864011713@qq.com"
         icon="email"
         :title-width="180"
         :arrow="false"
@@ -29,7 +29,7 @@
       <divider></divider>
     </u-cell-group>
     <view class="mx-2 mt-5">
-      <u-button type="primary" text="修改个人信息"></u-button>
+      <u-button type="primary" text="修改个人信息" @click="navTo('/subpackage-home/modifyInfo/modifyInfo')"></u-button>
     </view>
   </view>
 </template>
@@ -41,7 +41,8 @@ export default {
   onLoad() {},
   methods: {
     navTo(url) {
-      uni.navigateTo({
+      uni.$u.route({
+        type: 'redirect',
         url: url
       });
     }
