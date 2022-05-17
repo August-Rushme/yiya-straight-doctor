@@ -106,12 +106,12 @@ export default {
     }
   },
   onShow() {
-    this.getPatientList();
     this.pageInfo = {
       pageNum: 1,
       pageSize: 6,
       doctorId: 1
     };
+    this.getPatientList();
     this.radios = [
       { text: '全部', checked: true },
       { text: '待看诊', checked: false },
