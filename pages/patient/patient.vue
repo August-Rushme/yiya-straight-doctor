@@ -35,6 +35,7 @@
 </template>
 
 <script>
+		import {mapActions } from 'vuex'
 import patientSearch from '@/components/common/search.vue';
 import patientList from '@/components/patient/patient-list.vue';
 export default {
@@ -105,7 +106,7 @@ export default {
       });
     }
   },
-  onShow() {
+ async onShow() {
     this.pageInfo = {
       pageNum: 1,
       pageSize: 6,
@@ -117,8 +118,19 @@ export default {
       { text: '待看诊', checked: false },
       { text: '时间', checked: false }
     ];
+	const res = await this.hasMessageAction(parseInt(uni.getStorageSync('userInfo').id));
+	if(res.count){
+			 uni.showTabBarRedDot({
+			 		 index: 2,
+			 })
+	}else {
+		uni.hideTabBarRedDot({
+			index:2
+		})
+	}
   },
   methods: {
+	    ...mapActions(['hasMessageAction']),
     async radioClick(name) {
       this.radios.map((item, index) => {
         item.checked = index === name ? true : false;

@@ -86,6 +86,10 @@ export default {
     };
   },
   async onLoad(options) {
+	  uni.showLoading({
+	  	title: '加载中',
+	  	mask: false
+	  });
     this.receiverId = options.id;
     const receiverInfo = await this.getUserByIdAction(parseInt(options.id));
     const messagelist = await this.getMessageAction({
@@ -99,6 +103,7 @@ export default {
       pageNum: 2,
       pageSize: 15
     });
+
     this.hasMore = messageAll.list.length > 0 ? true : false;
     let index = 0;
     const rawList = [];
@@ -116,15 +121,16 @@ export default {
         avatar:
           uni.getStorageSync('userInfo').id == item.userId ? uni.getStorageSync('userInfo').photo : receiverInfo.photo
       };
+	
+	  const greaterOneDay =  new Date() - Date.parse(item.sendDate) > 24*60*60*1000 ? true : false 
       rawList.push(message);
-      if (item.status === 0 && uni.getStorageSync('userInfo').id != item.userId) {
+      if (item.status === 0 && uni.getStorageSync('userInfo').id != item.userId && !greaterOneDay) {
         index++;
       }
     });
-    console.log(this.allMessage, 222);
     this.messagelist = rawList.slice(0, index > 10 ? rawList.length - 10 : rawList.length - index);
+	uni.hideLoading();
     this.pageToBottom();
-    console.log(this.messagelist, 1111);
     this.receiverAvatar = receiverInfo.photo;
     this.receiverName = receiverInfo.nickname;
     const goeasy = GoEasy.getInstance({
