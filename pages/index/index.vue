@@ -59,13 +59,25 @@ export default {
       uni.stopPullDownRefresh();
     }
   },
-  onShow() {
+ async onShow() {
     this.pageInfo = {
       pageNum: 1,
       pageSize: 5,
       query: ''
     };
     this.getAppointmentList();
+	const res = await this.hasMessageAction(parseInt(uni.getStorageSync('userInfo').id));
+	if(res.count){
+	
+			 uni.showTabBarRedDot({
+			 		 index: 2,
+			 })
+	}else {
+		uni.hideTabBarRedDot({
+			index:2
+		})
+
+	}
   },
   async onReachBottom() {
     this.pageInfo.pageNum++;
@@ -85,7 +97,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getScheduleListAction']),
+    ...mapActions(['getScheduleListAction','hasMessageAction']),
     // 获取预约订单列表
     async getAppointmentList() {
       const { data: res } = await this.$http.post('/patient/getPatient', this.pageInfo);

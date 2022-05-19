@@ -15,7 +15,8 @@ import {
   getMessageList,
   searchMessage,
   getMessage,
-  remarkIsRead
+  remarkIsRead,
+  hasMessage
 } from '../service/message/message.js'
 Vue.use(Vuex);
 const store = new Vuex.Store({
@@ -100,6 +101,13 @@ const store = new Vuex.Store({
       }
       return res.data
     },
+	async hasMessageAction({commit},payload){
+		const res = await hasMessage(payload);
+		if (!res.code == 200) {
+		  return uni.$u.toast('请求失败');
+		}
+		return res
+	},
   },
 
 

@@ -69,8 +69,20 @@
       <block v-for="item in otherNav" :key="item.name">
         <view class="navItem d-flex j-sb a-center border-bottom  py-2 px-3" @click="goToPage(item.pageName)">
           <view class="itemname d-flex">
+			  <template v-if="item.needMark">
+			  			 <view class="needMark">
+			  			 		 <image :src="item.src" mode="" style="width: 48rpx;height: 48rpx;"></image>
+			  					 <view class="redDot">
+			  					 	
+			  					 </view>
+			  			 </view>
+			  	
+			  <text class="ml-2">{{item.name}}</text>
+			  </template>
+			  <template v-else>
             <image :src="item.src" mode="" style="width: 48rpx;height: 48rpx;"></image>
             <text class="ml-2">{{ item.name }}</text>
+			 </template>
           </view>
           <view class="arrow font-md">></view>
         </view>
@@ -79,6 +91,7 @@
   </view>
 </template>
 <script>
+	import {mapActions } from 'vuex'
 export default {
   components: {},
   data() {
@@ -110,7 +123,8 @@ export default {
         {
           name: '问诊模板',
           src: 'https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/img/Consultation.png',
-          pageName: 'template'
+          pageName: 'template',
+		  needMark: false
         },
         {
           name: '系统设置',
@@ -123,10 +137,23 @@ export default {
   onLoad() {
     this.token = uni.getStorageSync('token');
   },
-  onShow() {
+ async onShow() {
     this.token = uni.getStorageSync('token');
+	const res = await this.hasMessageAction(parseInt(uni.getStorageSync('userInfo').id));
+	if(res.count){
+this.otherNav[4].needMark = true;
+			 uni.showTabBarRedDot({
+			 		 index: 2,
+			 })
+	}else {
+		uni.hideTabBarRedDot({
+			index:2
+		})
+		this.otherNav[4].needMark = false
+	}
   },
   methods: {
+	  ...mapActions(['hasMessageAction']),
     goAttestation() {
       uni.$u.route('/subpackage-home/entry-attestation/entry-attestation');
     },
@@ -210,7 +237,18 @@ export default {
   color: white;
   background: linear-gradient(to right, #55a2ef, #2884f5);
 }
-
+.needMark {
+	position: relative;
+	.redDot {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 20rpx;
+		height: 20rpx;
+		background-color: red;
+		border-radius: 50%;
+	}
+}
 .span-5 {
   p {
     text-align: center;
