@@ -1,10 +1,10 @@
 <template>
   <view>
     <view class="header">
-      <view class="onPatient m-2" :style="{ background: patientBackground }">
+      <view class="onPatient m-2" :style="{ background: patientBackground }"  @click="handlePatient">
         <text
           class="font-big p-status"
-          @click="handlePatient"
+         
           :style="{ color: fontColor, 'margin-top': top, 'margin-left': left, 'font-size': size }"
         >
           {{ patitentStatus }}

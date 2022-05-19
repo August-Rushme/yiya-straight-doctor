@@ -3,7 +3,7 @@
     <view class="medicalRecord  mt-2">
       <uni-section title="我的预约" type="line">
         <block v-for="(item, index) in medicalRecordData" :key="index">
-          <uni-card @click="handlePatientClick(item.id, item.appointmentId)">
+          <uni-card @click="handlePatientClick(item.id,item.orderNumber)">
             <view class="content">
               <view class="user_img position-absolute ">
                 <u--image
@@ -68,17 +68,18 @@ export default {
   data() {
     return {
       disabled: false,
-      recordData: []
+      recordData: [],
+      userId: uni.getStorageSync('userInfo').id
     };
   },
 
   methods: {
-    handlePatientClick(id, appointmentId) {
+    handlePatientClick(id, orderNumber) {
       uni.$u.route({
         url: '/subpackage-patient/patient-detail/patient-detail',
         params: {
-          id,
-          appointmentId
+          id: id,
+          orderNumber
         }
       });
     },

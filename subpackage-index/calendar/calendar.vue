@@ -24,6 +24,7 @@
     <view class="" style="margin-top: 300rpx;" v-if="newList.length == 0">
       <u-loading-icon mode="circle" text="加载中"></u-loading-icon>
     </view>
+    <view class="add"></view>
     <swiper :current="active" style="height: 1300rpx; margin-bottom: 20rpx;" @change="handleChangeTab">
       <swiper-item v-for="(item, index) in newList" :key="index">
         <scroll-view scroll-y="true" style="height: 1300rpx;" enable-flex>
@@ -53,7 +54,7 @@ import { mapActions, mapState } from 'vuex';
 export default {
   name: 'sl-calendar',
   components: {
-    dateTable,
+    dateTable
   },
   props: {
     /**
@@ -290,9 +291,9 @@ export default {
 
           &.active {
             //选中
-			display: flex;
+            display: flex;
             align-items: center;
-			justify-content: center;
+            justify-content: center;
             background: #578bff;
             color: white;
           }
@@ -333,5 +334,31 @@ export default {
       color: grey;
     }
   }
+}
+.add{
+height: 100rpx;
+width: 100rpx;
+background: #005a8a;
+position: fixed;
+right: 20rpx;
+bottom: calc(20%);
+border-radius:50%;
+z-index: 99;
+box-shadow: 0 0 20rpx #005a8a60;
+}
+.add::before,
+.add::after{
+content: '';
+width: 6rpx;
+height: 50rpx;
+left: calc(50% - 3rpx);
+top: calc(50% - 50rpx / 2);
+border-radius: 6rpx;
+background: #eee;
+position: absolute;
+}
+
+.add::before {
+transform: rotate(90deg);
 }
 </style>
