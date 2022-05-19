@@ -6,9 +6,10 @@
       <view class="my-card d-flex j-sb a-center px-4">
         <view class="userInfo d-flex">
           <u-avatar :src="avatar" size="50" @click="goSetInfo"></u-avatar>
-          <view class="username ml-1 pt-1">
+          <view class="username ml-1">
             <text class="line-h0 font-md font-weight">{{ username }}</text>
             <view class="font-md font-weight" @click="goSetInfo">{{ userInfo.name }}</view>
+			<view class="" @click="goSetInfo">设置个人信息</view>
           </view>
         </view>
         <template v-if="!token">

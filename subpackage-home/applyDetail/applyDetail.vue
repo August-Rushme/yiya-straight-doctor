@@ -3,35 +3,35 @@
     <view class="card-wrap" style="padding: 60rpx 0pt;">
       <view class="card-box ">
         <view class="card-info  pt-3 rpx-2">
-          <view class="name d-flex j-sb a-center pb-1 pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1 pr-3 px-3">
             <view class="label">姓名:</view>
             <text style="color: #939393;">李满元</text>
           </view>
-          <view class="name d-flex j-sb a-center pb-1 pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1 pr-3 px-3">
             <view class="label">性别:</view>
             <text style="color: #939393;">男</text>
           </view>
-          <view class="name d-flex j-sb a-center pb-1 pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1 pr-3 px-3">
             <view class="label">出生日期:</view>
             <text style="color: #939393;">2022-09-15</text>
           </view>
-          <view class="name d-flex j-sb a-center pb-1 pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1 pr-3 px-3">
             <view class="label">手机号码:</view>
             <text style="color: #939393;">18976329315</text>
           </view>
-          <view class="name d-flex j-sb a-center pb-1  pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1  pr-3 px-3">
             <view class="label">执业时长:</view>
             <text style="color: #939393;">4年</text>
           </view>
-          <view class="name d-flex j-sb a-center pb-1  pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1  pr-3 px-3">
             <view class="label">身份证号:</view>
             <text style="color: #939393;">21012219550418492X</text>
           </view>
-          <view class="name d-flex j-sb a-center pb-1  pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1  pr-3 px-3">
             <view class="label">操作项目:</view>
             <text style="color: #939393;">牙齿美白，普通种植，根管治疗</text>
           </view>
-          <view class="name d-flex j-sb a-center pb-1 pr-2 px-3">
+          <view class="name d-flex j-sb a-center pb-1 pr-3 px-3">
             <view class="label">申请诊所:</view>
             <text style="color: #939393;">清合口腔</text>
           </view>
@@ -43,9 +43,9 @@
       </view>
       <view class="card-box">
         <view class="card-info pt-3 px-2">
-          <image src="../../static/logo.png" mode="" v-if="status == 0">
+          <image src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/doctorqua.png" mode="" v-if="status == 0">
             <view class="reason" v-if="status == 1">
-              <view class="name d-flex j-sb a-center pb-1  pr-2 px-3">
+              <view class="name d-flex j-sb a-center pb-1  pr-3 px-3 mt-2">
                 <view class="label">驳回原因:</view>
                 <text style="color: #939393;">不会符合本诊所要求</text>
               </view>
