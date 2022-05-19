@@ -111,8 +111,9 @@ export default {
       });
     },
     // 获取申请数据
-    getApplyData() {
-      this.$http.get('/');
+    async getApplyData() {
+      const { data: res } = await this.$http.post('/qualification/getByIdAndStatus');
+      console.log()
     }
   }
 };

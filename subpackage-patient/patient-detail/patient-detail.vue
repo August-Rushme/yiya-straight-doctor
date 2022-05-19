@@ -100,19 +100,19 @@
       <view class="contentAppointment">
         <view class="name d-flex j-sb a-center border-bottom pb-1 mt-2 pr-2">
           <view class="label">手机号:</view>
-          <text>{{ patientDetail.appointment.phone }}</text>
+          <text>{{ patientDetail.doctorOrder.phone }}</text>
         </view>
         <view class="name d-flex j-sb a-center border-bottom pb-1 mt-2 pr-2">
           <view class="label">预约项目:</view>
-          <text>{{ patientDetail.appointment.project }}</text>
+          <text>{{ patientDetail.doctorOrder.project }}</text>
         </view>
         <view class="name d-flex j-sb a-center border-bottom pb-1 mt-2 pr-2">
           <view class="label">预约时间:</view>
-          <text>{{ patientDetail.appointment.appointmentTime }}</text>
+          <text>{{ patientDetail.doctorOrder.appointmentTime }}</text>
         </view>
         <view class="name d-flex j-sb a-center border-bottom pb-1 mt-2 pr-2">
           <view class="label">诊所:</view>
-          <text>{{ patientDetail.appointment.clinic }}</text>
+          <text>{{ patientDetail.doctorOrder.clinic }}</text>
         </view>
         <view class="name d-flex j-sb a-center border-bottom pb-1 mt-2 pr-2">
           <view class="label w-50">处置:</view>
@@ -124,6 +124,7 @@
         </view>
       </view>
     </uni-card>
+    <view class="mt-3 mx-3"><u-button type="primary" text="确认入诊" @click="handleConfirm"></u-button></view>
   </view>
 </template>
 
@@ -136,19 +137,22 @@ export default {
     };
   },
   onLoad(options) {
-    this.getPatientDetail(options.id, options.appointmentId);
+    this.getPatientDetail(options.id, options.orderNumber);
     console.log(options);
   },
   methods: {
     //获得病历详情
-    async getPatientDetail(id, appointmentId) {
-      console.log(id, appointmentId);
-      const { data: res } = await this.$http.post('/doctor/getRecordDet', { recordId: id, appointId: appointmentId });
+    async getPatientDetail(id, orderNumber) {
+      console.log(id, orderNumber);
+      const { data: res } = await this.$http.post('/doctor/getRecordDet', { id: id, orderNumber: orderNumber });
       this.patientDetail = res;
       console.log(res);
     },
     handleRemind() {
       uni.$u.toast('提醒成功');
+    },
+    handleConfirm(){
+      uni.$u.toast('确认成功');
     }
   }
 };
