@@ -29,7 +29,11 @@
 					</view>
 					<view class="name d-flex j-sb a-center pb-1  pr-3 px-3">
 						<view class="label">操作项目:</view>
-						<text style="color: #939393;">牙齿美白，普通种植，根管治疗</text>
+						<view class="">
+							<text style="color: #939393;" v-for="(item,index) in applyDetail.skills"
+								:key="index">{{item}},</text>
+						</view>
+
 					</view>
 					<view class="name d-flex j-sb a-center pb-1 pr-3 px-3">
 						<view class="label">申请诊所:</view>
@@ -47,12 +51,18 @@
 			</view>
 			<view class="card-box">
 				<view class="card-info pt-3 px-2">
-					<image src="https://oss-augustrush.oss-cn-shenzhen.aliyuncs.com/yayiImage/doctorqua.png" mode=""
+					<image :src="applyDetail.certificate" mode=""
 						v-if="status == 0">
 						<view class="reason" v-if="status == 1">
 							<view class="name d-flex j-sb a-center pb-1  pr-3 px-3 mt-2">
 								<view class="label">驳回原因:</view>
 								<text style="color: #939393;">不会符合本诊所要求</text>
+							</view>
+						</view>
+						<view class="reason" v-if="status == 2">
+							<view class="name d-flex j-sb a-center pb-1  pr-3 px-3 mt-2">
+								<view class="label">状态:</view>
+								<text style="color: #939393;">恭喜您，您的申请已通过</text>
 							</view>
 						</view>
 					</image>
@@ -72,7 +82,8 @@
 				qualifierId: '',
 				status: 0,
 				userId: uni.getStorageSync('userInfo').id,
-				applyDetail: {}
+				applyDetail: {},
+				skillLabels: []
 			};
 		},
 		onLoad(option) {
@@ -80,7 +91,7 @@
 			this.status = option.status
 		},
 		onShow() {
-			this.getApplyDetail()
+			this.getSkillLabels()
 		},
 		methods: {
 			// 获得申请详情
@@ -91,8 +102,26 @@
 					qualifierId: this.qualifierId,
 					userId: this.userId
 				})
+				let skills = []
+				res.skills.forEach(item => {
+					this.skillLabels.forEach(item2 => {
+						if (item2.id == item) {
+							skills.push(item2.label)
+						}
+					})
+				})
+				res.skills = skills
 				this.applyDetail = res
+				console.log(skills)
 				console.log(this.applyDetail)
+			},
+			// 获取医生选择方向标签
+			async getSkillLabels() {
+				const {
+					data: res
+				} = await this.$http.get("/qualification/getDoctorLabels")
+				this.skillLabels = res
+				this.getApplyDetail()
 			}
 		}
 	};

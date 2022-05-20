@@ -300,7 +300,7 @@ export default {
       let _this = this;
       return new Promise((resolve, reject) => {
         let a = uni.uploadFile({
-          url: 'http://127.0.0.1:8081/qualification/upload',
+          url: 'http://8.129.76.241:8081/qualification/upload',
           filePath: url,
           name: 'file',
           formData: {

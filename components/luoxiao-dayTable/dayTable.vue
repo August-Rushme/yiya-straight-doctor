@@ -370,10 +370,10 @@ export default {
     //判断是否为过去时间
     isOldtime(startId, touchid) {
       let nowDate1 = this.$timeFormat(new Date(), 'yyyy/MM/dd');
-      console.log(this.$props.chooseDateProp !== nowDate1);
+      // console.log(this.$props.chooseDateProp !== nowDate1);
       if (this.$props.chooseDateProp !== nowDate1) {
         this.isToday = -2;
-        console.log(111);
+        // console.log(111);
         return 0;
       }
       let nowDate = new Date();
@@ -435,8 +435,8 @@ export default {
         }
       });
       top = stId * self.unitHeight;
-      console.log(self.defaultList[stId]);
-      console.log(self.defaultList[endId]);
+      // console.log(self.defaultList[stId]);
+      // console.log(self.defaultList[endId]);
       startTime = self.defaultList[stId].timeTitle;
       endTime = self.defaultList[endId].timeTitle;
       height = self.unitHeight * (endId - stId);
@@ -542,8 +542,8 @@ export default {
         //订会时间不小于15分钟或者不大于4个小时
         return;
       }
-      console.log(self.defaultList[stId] + '2');
-      console.log(self.defaultList[endId] + '2');
+      // console.log(self.defaultList[stId] + '2');
+      // console.log(self.defaultList[endId] + '2');
       let startTime = self.defaultList[stId].timeTitle;
       let endTime = self.defaultList[endId].timeTitle;
 
@@ -636,8 +636,8 @@ export default {
       if (trueHeight > meeting.height) {
         let top = meeting.idSt * self.unitHeight;
         let style = 'top:' + top + 'px;height:' + trueHeight + 'px;';
-        console.log(self.defaultList[meeting.idSt] + '3');
-        console.log(self.defaultList[meeting.idEnd] + '3');
+        // console.log(self.defaultList[meeting.idSt] + '3');
+        // console.log(self.defaultList[meeting.idEnd] + '3');
         let startTime = self.defaultList[meeting.idSt].timeTitle;
         let endTime = self.defaultList[meeting.idEnd].timeTitle;
         let startTimeShow = startTime,
@@ -688,8 +688,8 @@ export default {
       if (height < self.minMute * self.unitHeight || height > self.unitHeight * 16) {
         return;
       }
-      console.log(self.defaultList[self.createMeet.idSt]);
-      console.log(self.defaultList[defaultId + nid] + '44');
+      // console.log(self.defaultList[self.createMeet.idSt]);
+      // console.log(self.defaultList[defaultId + nid] + '44');
       let startTime = self.defaultList[self.createMeet.idSt].timeTitle;
       let endTime = self.defaultList[defaultId + nid].timeTitle;
       let startTimeShow = startTime,
@@ -766,8 +766,8 @@ export default {
       }
       if (trueHeight > meeting.height) {
         let style = 'top:' + meeting.top + 'px;height:' + trueHeight + 'px;';
-        console.log(self.defaultList[meeting.idSt] + '555');
-        console.log(self.defaultList[meeting.idEnd] + '555');
+        // console.log(self.defaultList[meeting.idSt] + '555');
+        // console.log(self.defaultList[meeting.idEnd] + '555');
         let startTime = self.defaultList[meeting.idSt].timeTitle;
         let endTime = self.defaultList[meeting.idEnd].timeTitle;
 
@@ -810,7 +810,7 @@ export default {
     },
     //点击创建的会议移动中
     touchMeetingMove(e) {
-      console.log(e)
+      // console.log(e)
       let self = this;
       let y = e.changedTouches[0].clientY;
       let ny = y - self.meetingTouchStartY; //移动相对位移
@@ -837,8 +837,8 @@ export default {
       if (!!hasMeeting) {
         return;
       }
-      console.log(self.defaultList[idSt] + '666');
-      console.log(self.defaultList[idEnd] + '666');
+      // console.log(self.defaultList[idSt] + '666');
+      // console.log(self.defaultList[idEnd] + '666');
       let startTime = self.defaultList[idSt].timeTitle;
       let endTime = self.defaultList[idEnd].timeTitle;
       let startTimeShow = startTime,
@@ -881,7 +881,7 @@ export default {
       let absY = Math.abs(y - self.meetingTouchStartOff);
       if (absY == 0) {
         //后期即为点击会议事件
-        // this.showError('预订功能敬请期待');
+        // this.showError('功能开发中');
         let params = {
           startTime: this.$props.chooseDateProp + ' ' + self.createMeet.startTime + ':00',
           endTime: this.$props.chooseDateProp + ' ' + self.createMeet.endTime + ':00',
@@ -912,8 +912,8 @@ export default {
       }
       if (trueTop != meeting.top) {
         let style = 'top:' + trueTop + 'px;height:' + meeting.height + 'px;';
-        console.log(self.defaultList[meeting.idSt] + '777');
-        console.log(self.defaultList[meeting.idEnd] + '777');
+        // console.log(self.defaultList[meeting.idSt] + '777');
+        // console.log(self.defaultList[meeting.idEnd] + '777');
         let startTime = self.defaultList[meeting.idSt].timeTitle,
           endTime = self.defaultList[meeting.idEnd].timeTitle;
         let startTimeShow = startTime,
