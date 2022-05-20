@@ -24,7 +24,8 @@
     <view class="" style="margin-top: 300rpx;" v-if="newList.length == 0">
       <u-loading-icon mode="circle" text="加载中"></u-loading-icon>
     </view>
-    <view class="add"></view>
+	<!-- 手动添加日常程按钮 -->
+  <!--  <view class="add"></view> --> 
     <swiper :current="active" style="height: 1300rpx; margin-bottom: 20rpx;" @change="handleChangeTab">
       <swiper-item v-for="(item, index) in newList" :key="index">
         <scroll-view scroll-y="true" style="height: 1300rpx;" enable-flex>

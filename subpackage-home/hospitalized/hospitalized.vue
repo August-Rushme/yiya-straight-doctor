@@ -77,14 +77,14 @@ export default {
       clinicList: [],
       pageInfo: {
         pageNum: 1,
-        pageSize: 5
+        pageSize: 7
       }
     };
   },
   onShow() {
     this.pageInfo = {
       pageNum: 1,
-      pageSize: 5
+      pageSize: 7
     };
     this.getClinicList();
   },

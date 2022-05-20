@@ -135,6 +135,10 @@
 				if (price < 1000) {
 					price = 1000
 				}
+				if (this.patientDetail.time == 0) {
+					price = 0
+				}
+
 				return price
 			}
 		},
