@@ -2,18 +2,16 @@
 	<view class="page">
 		<view class="ask d-flex j-center">
 			<template v-if="!hasMore">
-					<view class="tip text-center my-3">  {{title}}</view>
+				<view class="tip text-center my-3">{{ title }}</view>
 			</template>
 			<template v-else>
 				<template v-if="moreloading">
-						<u-loading-icon mode="circle" text="加载中"></u-loading-icon>
+					<u-loading-icon mode="circle" text="加载中"></u-loading-icon>
 				</template>
-			   <template v-else>
-			   	<view class="tip text-center my-3" @click="lookMoreMessage"> 查看更多历史消息</view>
-			   </template>
-			
+				<template v-else>
+					<view class="tip text-center my-3" @click="lookMoreMessage">查看更多历史消息</view>
+				</template>
 			</template>
-		
 		</view>
 
 		<block v-for="(item, index) in messagelist" :key="index">
@@ -24,10 +22,21 @@
 						<view class="name">{{ item.nickName }}</view>
 					</template>
 					<template v-if="item.type === 'message'">
-						<view class="d-flex" :class="item.isMe ? 'j-end': ''">
-						<view class="text">{{ item.text }}</view>
+						<view class="d-flex" :class="item.isMe ? 'j-end' : ''">
+							<view class="text">{{ item.text }}</view>
 						</view>
-					
+					</template>
+					<template v-else-if="item.type === 'record'">
+						<view class="d-flex" :class="item.isMe ? 'j-end' : ''" @click="playRecord(index)">
+							<view class="text">
+								{{ item.time }}"
+								<text>
+									<text class="horn horn1" :class="item.playState ? 'hornActive1' : ''"></text>
+									<text class="horn horn2" :class="item.playState ? 'hornActive2' : ''"></text>
+									<text class="horn horn3"></text>
+								</text>
+							</view>
+						</view>
 					</template>
 					<template v-else-if="item.type === 'image'">
 						<view class="image"><image @tap="preview(index)" :src="item.url" mode="widthFix"></image></view>
@@ -40,6 +49,7 @@
 							<view class="video"><video :src="item.url" v-if="!!item.url" controls show-progress></video></view>
 						</template>
 					</template>
+
 					<template v-if="item.isMe">
 						<view class="d-flex j-end mt-1">
 							<view class="isRead">{{ item.isRead ? '已读' : '未读' }}</view>
@@ -49,25 +59,100 @@
 			</view>
 		</block>
 
-		<view class="block"></view>
+		<view class="block" :style="{ height: blockHeight + 'rpx' }"></view>
 		<view class="sendInput">
-			<u-input placeholder="请描述您的问题或症状" border="surround" v-model="message">
+			<u-input placeholder="请描述您的问题或症状" paddingBottom="50rpx" border="surround" v-model="message" :useInput="useInput">
+				<template slot="prefix">
+					<view><uni-icons type="mic" size="30" @click="recordVoice"></uni-icons></view>
+				</template>
 				<template slot="suffix">
 					<view class="d-flex a-center">
-						<view class="mr-1"><uni-icons type="image" size="30" @tap="chooseImage"></uni-icons></view>
-						<view class="mr-1"><uni-icons type="videocam" size="30" @tap="chooseVideo"></uni-icons></view>
+						<view class="mr-1">
+							<template v-if="isPlus">
+								<uni-icons type="plus" size="35" @click="open"></uni-icons>
+							</template>
+							<template v-else>
+								<uni-icons type="minus" size="35" @click="close"></uni-icons>
+							</template>
+						</view>
+
 						<u-button shape="circle" icon="arrow-upward" size="small" @tap="sendMessage"></u-button>
 					</view>
 				</template>
 			</u-input>
+			<template v-if="showMoreFn">
+				<view class="moreFn d-flex">
+					<view class="d-flex flex-column j-center a-center" style="margin-right: 60rpx;">
+						<view class="d-flex flex-column j-center a-center" style="width: 120rpx">
+							<uni-icons type="image" size="40" @tap="chooseImage"></uni-icons>
+							<view class="text-muted" style="margin-top: -30rpx;">照片</view>
+						</view>
+					</view>
+					<view class="d-flex flex-column j-center a-center" style="margin-right: 60rpx;">
+						<view class="d-flex flex-column j-center a-center" style="width: 120rpx">
+							<uni-icons type="camera" size="40" @tap="chooseVideo"></uni-icons>
+							<view class="text-muted" style="margin-top: -30rpx;">视频文件</view>
+						</view>
+					</view>
+					<view class="d-flex flex-column j-center a-center" style="margin-right: 60rpx;">
+						<view class="d-flex flex-column j-center a-center" style="width: 120rpx">
+							<view class="d-flex j-center a-center" style="width: 40px;height: 40px;margin-top: 12px;">
+								<image src="/static/images/ct2.png" style="width: 35px;height: 35px;"></image>
+							</view>
+
+							<view class="text-muted">CT</view>
+						</view>
+					</view>
+					<view class="d-flex flex-column j-center a-center">
+						<view class="d-flex flex-column j-center a-center" style="width: 120rpx">
+							<view class="d-flex j-center a-center" style="width: 40px;height: 40px;margin-top: 10px;">
+								<image src="/static/images/bingli2.png" style="width: 35px;height: 35px;"></image>
+							</view>
+
+							<view class="text-muted">病例</view>
+						</view>
+					</view>
+				</view>
+				<view class="d-flex mb-5">
+					<view class="d-flex flex-column j-center a-center" style="width: 120rpx;margin-left: 60rpx;">
+						<view class="d-flex flex-column j-center a-center" >
+							<uni-icons type="videocam" size="40" @tap="callVideo"></uni-icons>
+							<view class="text-muted" style="margin-top: -30rpx;">视频问诊</view>
+						</view>
+					</view>
+				</view>
+			</template>
+			<template v-if="startRecord">
+				<view class="audioModal d-flex flex-column a-center px-5 py-2">
+					<template v-if="sendRecord">
+						<view>{{ recordTime }}</view>
+						<view class="d-flex a-center py-3">
+							<uni-icons type="mic-filled" color="#ffffff" size="30"></uni-icons>
+							<view class="pt-2">
+								<view class="line line1"></view>
+								<view class="line line2"></view>
+								<view class="line line3"></view>
+							</view>
+						</view>
+						<view class="py-1">松开发送, 上滑取消</view>
+					</template>
+					<template v-else>
+						<image src="/static/images/cancleRecord.png" style="height: 80rpx;width: 80rpx;" class="my-3"></image>
+						<view class="py-1" style="color: #22b1ac;">松开,取消发送</view>
+					</template>
+				</view>
+			</template>
 		</view>
 	</view>
 </template>
 
-
 <script>
 import GoEasy from 'goeasy';
 import { mapActions } from 'vuex';
+const recorderManager = uni.getRecorderManager();
+const innerAudioContext = uni.createInnerAudioContext();
+
+innerAudioContext.autoplay = true;
 export default {
 	data() {
 		return {
@@ -75,65 +160,92 @@ export default {
 				pageSize: 15,
 				pageNum: 1
 			},
-			moreloading: false, 
+			startRecord: false,
+			nickname: uni.getStorageSync('userInfo').nickname,
+			avatar: uni.getStorageSync('userInfo').photo,
+			recordSecondTime: 1,
+			recordMinTime: 0,
+			blockHeight: 180,
+			showMoreFn: false,
+			isPlus: true,
+			sendRecord: true,
+			moreloading: false,
 			allMessage: [],
 			hasMore: false,
+			useInput: true,
+			canSendRecord: false,
 			first: true,
 			loadingIndex: 0,
 			messageId: [],
 			isloading: [true],
+			windowHeight: '',
 			progress: '0%',
-			title: '正在连接该医生',
+			title: '正在连接该病人',
 			messagelist: [],
+			lasteTimer: null,
 			receiverId: '',
 			receiverAvatar: '',
 			receiverName: '',
 			message: ''
 		};
 	},
+	computed: {
+		recordTime() {
+			const time = this.recordMinTime.toString().padStart(2, '0') + ':' + this.recordSecondTime.toString().padStart(2, '0');
+			return time;
+		}
+	},
 	async onLoad(options) {
-	     uni.showLoading({
-	     	title: '加载中',
-	     	mask: false
-	     });
+		uni.showLoading({
+			title: '加载中',
+			mask: false
+		});
+		const _this = this;
 		this.receiverId = options.id;
 		const receiverInfo = await this.getUserByIdAction(parseInt(options.id));
 		const messagelist = await this.getMessageAction({
 			fromId: parseInt(uni.getStorageSync('userInfo').id),
 			toId: parseInt(options.id),
 			...this.pageInfo
-		})
-		const messageAll =  await this.getMessageAction({
+		});
+		const messageAll = await this.getMessageAction({
 			fromId: parseInt(uni.getStorageSync('userInfo').id),
 			toId: parseInt(options.id),
 			pageNum: 1,
-			pageSize: 99999
-		})
+			pageSize: 9999
+		});
+
 		this.hasMore = messageAll.list.length > 15 ? true : false;
 		let index = 0;
 		const rawList = [];
 		this.allMessage = messageAll.list;
+		this.setRead();
 		messagelist.list.reverse().forEach(item => {
-				const message = {
-					    id: item.id,
-						text: item.msg,
-						isMe: uni.getStorageSync('userInfo').id == item.userId ?  true : false,
-						isRead: item.status === 1 ? true : false,
-						type: item.type,
-						url: item.url,
-						nickName: uni.getStorageSync('userInfo').id == item.userId ? uni.getStorageSync('userInfo').nickname : receiverInfo.nickname,
-						avatar: uni.getStorageSync('userInfo').id == item.userId ? uni.getStorageSync('userInfo').photo : receiverInfo.photo
-				}
-				rawList.push(message)
-				const greaterOneDay =  new Date() - Date.parse(item.sendDate) > 24*60*60*1000 ? true : false 
-				if( item.status === 0 && uni.getStorageSync('userInfo').id != item.userId && !greaterOneDay){
-			      	index ++;
-				}
-				
-		})
-      this.messagelist = rawList.slice(0,index > 10 ? rawList.length-10 : rawList.length-index);
-	  	uni.hideLoading();
-	  this.pageToBottom();
+			const message = {
+				id: item.id,
+				text: item.msg,
+				isMe: uni.getStorageSync('userInfo').id == item.userId ? true : false,
+				isRead: item.status === 1 ? true : false,
+				type: item.type,
+				url: item.url,
+				nickName: uni.getStorageSync('userInfo').id == item.userId ? _this.nickname : receiverInfo.nickname,
+				avatar: uni.getStorageSync('userInfo').id == item.userId ? _this.avatar : receiverInfo.photo
+			};
+			rawList.push(message);
+			const greaterOneDay = new Date() - Date.parse(item.sendDate) > 24 * 60 * 60 * 1000 ? true : false;
+			if (item.status === 0 && uni.getStorageSync('userInfo').id != item.userId && !greaterOneDay) {
+				index++;
+			}
+		});
+		this.messagelist = rawList.slice(0, index > 10 ? rawList.length - 10 : rawList.length - index);
+		uni.hideLoading();
+		this.pageToBottom();
+		uni.authorize({
+			scope: 'scope.record',
+			success() {
+				console.log('用户授权了录音权限');
+			}
+		});
 		this.receiverAvatar = receiverInfo.photo;
 		this.receiverName = receiverInfo.nickname;
 		const goeasy = GoEasy.getInstance({
@@ -145,8 +257,6 @@ export default {
 		goeasy.connect({
 			id: uni.getStorageSync('userInfo').id, //pubsub选填，im必填，最大长度60字符
 			data: {
-				avatar: uni.getStorageSync('userInfo').photo,
-				nickname: uni.getStorageSync('userInfo').nickname
 			}, //必须是一个对象，pubsub选填，im必填，最大长度300字符，用于上下线提醒和查询在线用户列表时，扩展更多的属性
 			onSuccess: function() {
 				//连接成功
@@ -161,10 +271,61 @@ export default {
 				console.log('GoEasy is connecting', attempts);
 			}
 		});
-		this.title = '已为您连接该医生';
+		this.title = '已为您连接该病人';
 		this.goeasy = goeasy;
 		this.im = goeasy.im;
 		this.messageReceived();
+		recorderManager.onStop(function(res) {
+			if (_this.canSendRecord) {
+				_this.messagelist.push({
+					type: 'record',
+					isMe: true,
+					isRead: false,
+					playState: false,
+					text: null,
+					url: res.tempFilePath,
+					realTime: (res.duration / 1000).toFixed(3),
+					time: Math.ceil(res.duration / 1000),
+					nickName: _this.nickname,
+					avatar: _this.avatar
+				});
+				_this.pageToBottom();
+			}
+		});
+		uni.getSystemInfo({
+			success: res => {
+				_this.windowHeight = res.windowHeight;
+			}
+		});
+		let recordInterVal = null;
+		uni.$on('startRecord', function() {
+			_this.sendRecord = true;
+			_this.startRecord = true;
+			recorderManager.start();
+			recordInterVal = setInterval(() => {
+				_this.recordSecondTime++;
+				if (_this.recordSecondTime >= 60) {
+					_this.recordSecondTime = 0;
+					_this.recordMinTime++;
+				}
+			}, 1000);
+		});
+		uni.$on('stopRecord', function(data) {
+			_this.canSendRecord = !(_this.windowHeight - data.position.clientY > 80 || (_this.recordMinTime === 0 && _this.recordSecondTime === 1));
+			recorderManager.stop();
+			_this.startRecord = false;
+			clearInterval(recordInterVal);
+			_this.recordSecondTime = 1;
+			_this.recordMinTime = 0;
+		});
+
+		uni.$on('touchmove', function(data) {
+			if (_this.windowHeight - data.position.clientY > 80) {
+				_this.sendRecord = false;
+			} else {
+				_this.sendRecord = true;
+			}
+		});
 	},
 	onUnload() {
 		this.first = true;
@@ -178,47 +339,106 @@ export default {
 		});
 	},
 	methods: {
-		...mapActions(['getUserByIdAction','messageSaveAction','getMessageAction','remarkIsReadAction']),
-		async lookMoreMessage(){
-			this.moreloading = true
-			const _this = this
+		...mapActions(['getUserByIdAction', 'messageSaveAction', 'getMessageAction', 'remarkIsReadAction']),
+		// 视频通话
+		callVideo(){
+			
+		},
+		setRead(){
+			const _this = this;
+			if (_this.first) {
+	
+				_this.allMessage.forEach(item => {
+					if (item.status === 0 && parseInt(item.receiverId) === parseInt(uni.getStorageSync('userInfo').id)) {
+						const res = _this.remarkIsReadAction({
+							id: item.id,
+							status: 1
+						});
+					}
+				});
+				_this.first = false;
+			}
+		},
+		// 底部控件相关函数
+		open() {
+			this.useInput = true;
+			this.blockHeight = 550;
+			this.showMoreFn = true;
+			this.isPlus = false;
+			this.pageToBottom();
+		},
+		close() {
+			this.blockHeight = 180;
+			this.showMoreFn = false;
+			this.isPlus = true;
+			this.pageToBottom();
+		},
+		recordVoice() {
+			this.close();
+			this.useInput = !this.useInput;
+		},
+		playRecord(index) {
+			const _this = this;
+			if (_this.lasteTimer !== null) {
+				clearTimeout(_this.lasteTimer);
+			}
+			this.messagelist.forEach((item, index2) => {
+				if (index2 !== index) {
+					item.playState = false;
+				}
+			});
+			this.messagelist[index].playState = !this.messagelist[index].playState;
+			if (this.messagelist[index].playState) {
+				innerAudioContext.src = this.messagelist[index].url;
+			} else {
+				innerAudioContext.src = 'https://www.jianshu.com/';
+			}
+			console.log(innerAudioContext.src);
+			innerAudioContext.play();
+			_this.lasteTimer = setTimeout(() => {
+				_this.messagelist[index].playState = false;
+			}, _this.messagelist[index].realTime * 1000);
+		},
+		async lookMoreMessage() {
+			this.moreloading = true;
+			const _this = this;
 			this.pageInfo.pageNum++;
 			const moreMessagelist = await this.getMessageAction({
 				fromId: parseInt(uni.getStorageSync('userInfo').id),
 				toId: _this.receiverId,
 				...this.pageInfo
 			});
-			const pageInfo = {...this.pageInfo};
+			const pageInfo = { ...this.pageInfo };
 			pageInfo.pageNum++;
 			const moreMessagelist2 = await this.getMessageAction({
 				fromId: parseInt(uni.getStorageSync('userInfo').id),
 				toId: _this.receiverId,
-				...pageInfo 
+				...pageInfo
 			});
-			this.hasMore =  moreMessagelist2.list.length > 0 ? true : false;
+			this.hasMore = moreMessagelist2.list.length > 0 ? true : false;
 			const rawList = [];
 			moreMessagelist.list.reverse().forEach(item => {
-					const message = {
-						    id: item.id,
-							text: item.msg,
-							isMe: uni.getStorageSync('userInfo').id == item.userId ?  true : false,
-							isRead: item.status === 1 ? true : false,
-							type: item.type,
-							url: item.url,
-							nickName: uni.getStorageSync('userInfo').id == item.userId ? uni.getStorageSync('userInfo').nickname : receiverInfo.nickname,
-							avatar: uni.getStorageSync('userInfo').id == item.userId ? uni.getStorageSync('userInfo').photo  : _this.receiverAvatar
-					}
-					rawList.push(message)
-					})
-			this.messagelist = [...rawList ,...this.messagelist];
-			this.moreloading = false
-          console.log(moreMessagelist,6666);
+				const message = {
+					id: item.id,
+					text: item.msg,
+					isMe: uni.getStorageSync('userInfo').id == item.userId ? true : false,
+					isRead: item.status === 1 ? true : false,
+					type: item.type,
+					url: item.url,
+					nickName: uni.getStorageSync('userInfo').id == item.userId ? _this.nickname : _this.receiverName,
+					avatar: uni.getStorageSync('userInfo').id == item.userId ? _this.avatar : _this.receiverAvatar
+				};
+				rawList.push(message);
+			});
+			this.messagelist = [...rawList, ...this.messagelist];
+			this.moreloading = false;
+			console.log(moreMessagelist, 6666);
 		},
 		sendMessage() {
 			if (this.message.length > 0) {
 				const messageInfo = {
-					avatar: uni.getStorageSync('userInfo').photo ,
-					nickName: uni.getStorageSync('username'),
+					avatar: this.avatar,
+					nickName: this.nickname,
 					isMe: true,
 					text: this.message
 				};
@@ -238,7 +458,7 @@ export default {
 			uni.chooseVideo({
 				mediaType: ['image', 'video'],
 				success: res => {
-					res2 = res
+					res2 = res;
 					let hasPush = false;
 					_this.loadingIndex = _this.loadingIndex + 1;
 					_this.isloading.push(true);
@@ -247,7 +467,7 @@ export default {
 						to: {
 							type: GoEasy.IM_SCENE.PRIVATE, //私聊还是群聊，群聊为GoEasy.IM_SCENE.GROUP
 							id: parseInt(_this.receiverId),
-							data: { avatar: uni.getStorageSync('userInfo').photo, nickname: uni.getStorageSync('userInfo').nickname } //好友扩展数据, 任意格式的字符串或者对象，用于更新会话列表conversation.data
+							data: {  } //好友扩展数据, 任意格式的字符串或者对象，用于更新会话列表conversation.data
 						},
 
 						onProgress: function(event) {
@@ -257,8 +477,8 @@ export default {
 									isMe: true,
 									mark: res,
 									tmpId: _this.loadingIndex,
-									avatar: uni.getStorageSync('userInfo').photo ,
-									nickName: uni.getStorageSync('userInfo').nickname ,
+									avatar: _this.avatar,
+									nickName: _this.nickname,
 									text: null
 								});
 								_this.pageToBottom();
@@ -295,7 +515,7 @@ export default {
 								url: message.payload.url,
 								userId: uni.getStorageSync('userInfo').id,
 								receiverId: _this.receiverId
-							}
+							};
 							const res = await _this.messageSaveAction(Info);
 							_this.messageId.push(res.id);
 							_this.pageToBottom();
@@ -319,7 +539,7 @@ export default {
 							to: {
 								type: GoEasy.IM_SCENE.PRIVATE, //私聊还是群聊，群聊为GoEasy.IM_SCENE.GROUP
 								id: parseInt(_this.receiverId),
-								data: { avatar: uni.getStorageSync('userInfo').photo, nickname: uni.getStorageSync('userInfo').nickname } //好友扩展数据, 任意格式的字符串或者对象，用于更新会话列表conversation.data
+								data: {  } //好友扩展数据, 任意格式的字符串或者对象，用于更新会话列表conversation.data
 							},
 							onProgress: function(event) {
 								console.log('file uploading:', event);
@@ -331,8 +551,8 @@ export default {
 								_this.messagelist.push({
 									type: message.type,
 									isMe: true,
-									avatar: uni.getStorageSync('userInfo').photo ,
-									nickName: uni.getStorageSync('userInfo').nickname ,
+									avatar: _this.avatar,
+									nickName: _this.nickname,
 									messageId: message.messageId,
 									timestamp: message.timestamp,
 									isRead: message.read,
@@ -348,7 +568,7 @@ export default {
 									url: message.payload.url,
 									userId: uni.getStorageSync('userInfo').id,
 									receiverId: _this.receiverId
-								}
+								};
 								const res = await _this.messageSaveAction(Info);
 								_this.messageId.push(res.id);
 								_this.pageToBottom();
@@ -365,15 +585,15 @@ export default {
 		pageToBottom() {
 			this.$nextTick(function() {
 				uni.pageScrollTo({
-					scrollTop: 9999,
-					duration: 0
+					scrollTop: 99999,
+					duration: 500
 				});
 			});
 		},
 		remarkAndSend(message) {
 			const _this = this;
 			const payload = {
-				messageReadId: message.messageId,
+				messageReadId: message.messageId
 			};
 			_this.im.markPrivateMessageAsRead({
 				userId: message.senderId, //聊天对象的userId
@@ -415,10 +635,10 @@ export default {
 							url: '',
 							userId: uni.getStorageSync('userInfo').id,
 							receiverId: _this.receiverId
-						}
-					  const res = await	_this.messageSaveAction(Info);
-					  _this.messageId.push(res.id);
-					  _this.pageToBottom();
+						};
+						const res = await _this.messageSaveAction(Info);
+						_this.messageId.push(res.id);
+						_this.pageToBottom();
 						_this.message = '';
 					}
 				},
@@ -439,7 +659,7 @@ export default {
 				to: {
 					type: GoEasy.IM_SCENE.PRIVATE, //私聊还是群聊，群聊为GoEasy.IM_SCENE.GROUP
 					id: parseInt(_this.receiverId),
-					data: { avatar: uni.getStorageSync('userInfo').photo, nickname: uni.getStorageSync('userInfo').nickname } //好友扩展数据, 任意格式的字符串或者对象，用于更新会话列表conversation.data
+					data: {  } //好友扩展数据, 任意格式的字符串或者对象，用于更新会话列表conversation.data
 				}
 			});
 			return textMessage;
@@ -449,19 +669,6 @@ export default {
 			const _this = this;
 
 			let onPrivateMessageReceived = function(message) {
-				if(_this.first){
-					_this.allMessage.forEach(item => {
-						if(item.status === 0){
-							const res = _this.remarkIsReadAction({
-								id: item.id,
-								status: 1
-							})
-						}
-				
-					});
-					_this.first = false;
-				}
-	
 				if (_this.receiverId === message.senderId) {
 					const pushInfo = {
 						type: message.type,
@@ -480,15 +687,17 @@ export default {
 						_this.remarkAndSend(message);
 					};
 					if (message.type === 'mark') {
-						const messageId = _this.messageId[_this.messageId.length-1];
-						console.log(messageId,888)
-						const res = _this.remarkIsReadAction({
-							id: messageId,
-							status: 1
-						});
+						setTimeout(()=>{
+							const messageId = _this.messageId[_this.messageId.length-1];
+							console.log(messageId, 888);
+							const res = _this.remarkIsReadAction({
+								id: messageId,
+								status: 1
+							});
+						},100)
+				
 						_this.messagelist.forEach(item => {
 							if (item.messageId === message.payload.messageReadId) {
-							
 								item.isRead = true;
 							}
 						});
@@ -509,7 +718,8 @@ export default {
 
 <style scoped lang="scss">
 .page {
-	// height: 100vh;
+	min-height: 100vh;
+	scroll-behavior: smooth;
 	.tip {
 		width: 300rpx;
 		background-color: #efefef;
@@ -525,7 +735,7 @@ export default {
 	}
 	.isNotMe {
 		display: flex;
-			align-items: center;
+		align-items: center;
 	}
 	.isRead {
 		width: 100rpx;
@@ -539,7 +749,6 @@ export default {
 
 	.block {
 		background-color: #ffffff;
-		height: 120rpx;
 	}
 	.image {
 		width: 250rpx;
@@ -548,7 +757,7 @@ export default {
 		display: inline-block;
 		background-color: #21b0ab;
 		max-width: 400rpx;
-		text-align: justify; 
+		text-align: justify;
 		word-break: break-all;
 		border-radius: 15rpx;
 		padding: 5rpx 15rpx;
@@ -563,6 +772,126 @@ export default {
 		width: 750rpx;
 		bottom: 0;
 		background-color: #ffffff;
+	}
+	.moreFn {
+		padding: 10rpx 60rpx;
+	}
+	.audioModal {
+		position: absolute;
+		left: 50%;
+		bottom: 150px;
+		transform: translate(-50%, -50%);
+		color: white;
+		border-radius: 15rpx;
+		background-color: rgba(51, 51, 51, 0.8);
+
+		.line {
+			width: 30rpx;
+			height: 4rpx;
+			margin-bottom: 6rpx;
+			border-radius: 15rpx;
+			background-color: white;
+		}
+		.line1 {
+			visibility: hidden;
+			animation: line1 1.5s ease infinite;
+		}
+		.line2 {
+			visibility: hidden;
+			width: 20rpx;
+			animation: line2 1.5s ease infinite;
+		}
+		.line3 {
+			width: 10rpx;
+		}
+
+		@keyframes line1 {
+			0% {
+				visibility: hidden;
+			}
+			66% {
+				visibility: hidden;
+			}
+			67% {
+				visibility: visible;
+			}
+			100% {
+				visibility: visible;
+			}
+		}
+		@keyframes line2 {
+			0% {
+				visibility: hidden;
+			}
+			33% {
+				visibility: hidden;
+			}
+			34% {
+				visibility: visible;
+			}
+			100% {
+				visibility: visible;
+			}
+		}
+	}
+	// 录音播放
+	.horn {
+		display: inline-block;
+		width: 50rpx;
+		height: 50rpx;
+		border-radius: 50%;
+		background-color: #21b0ab;
+		border: 6rpx solid #21b0ab;
+		border-left-color: white;
+		vertical-align: middle;
+	}
+	.horn1 {
+		margin-left: 20rpx;
+		margin-right: -40rpx;
+	}
+	.horn2 {
+		width: 30rpx;
+		height: 30rpx;
+		margin-right: -20rpx;
+	}
+	.horn3 {
+		margin-right: 6rpx;
+		width: 10rpx;
+		height: 10rpx;
+	}
+	.hornActive1 {
+		animation: horn1 1.2s ease infinite;
+	}
+	.hornActive2 {
+		animation: horn2 1.2s ease infinite;
+	}
+	@keyframes horn1 {
+		0% {
+			visibility: hidden;
+		}
+		66% {
+			visibility: hidden;
+		}
+		67% {
+			visibility: visible;
+		}
+		100% {
+			visibility: visible;
+		}
+	}
+	@keyframes horn2 {
+		0% {
+			visibility: hidden;
+		}
+		33% {
+			visibility: hidden;
+		}
+		34% {
+			visibility: visible;
+		}
+		100% {
+			visibility: visible;
+		}
 	}
 }
 </style>
