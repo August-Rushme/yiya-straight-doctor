@@ -4,9 +4,9 @@ export function getNextDay(tempTime) {
 		tempTime = new Date()
 	}
 	// tempTime.setHours(24, 0, 0, 0, 0); //这行会出现：8月32号哈哈哈哈哈哈哈哈哈哈哈
-	
-	tempTime.setDate(tempTime.getDate()+1);
-	
+
+	tempTime.setDate(tempTime.getDate() + 1);
+
 	return tempTime;
 }
 // 昨天几号
@@ -141,4 +141,34 @@ export function getRecentDay(days, time) {
 		list: dayList,
 		index: curIndex
 	}
+}
+
+// 计算时间差
+// 计算2022/05/23 20:15:00 到 2022/05/23 22:00:00 的时间差,并转化为分钟
+export function getTimeDiff(startTime, endTime) {
+	var startTimeArray = startTime.split(' ')
+	var endTimeArray = endTime.split(' ')
+	var startDate = startTimeArray[0]
+	var endDate = endTimeArray[0]
+	var startHour = startTimeArray[1]
+	var endHour = endTimeArray[1]
+	var startDateArray = startDate.split('/')
+	var endDateArray = endDate.split('/')
+	var startYear = startDateArray[0]
+	var startMonth = startDateArray[1]
+	var startDay = startDateArray[2]
+	var endYear = endDateArray[0]
+	var endMonth = endDateArray[1]
+	var endDay = endDateArray[2]
+	var startHourArray = startHour.split(':')
+	var endHourArray = endHour.split(':')
+	var startHour = startHourArray[0]
+	var startMin = startHourArray[1]
+	var endHour = endHourArray[0]
+	var endMin = endHourArray[1]
+	var startTime = new Date(startYear, startMonth, startDay, startHour, startMin, 0)
+	var endTime = new Date(endYear, endMonth, endDay, endHour, endMin, 0)
+	var diff = endTime.getTime() - startTime.getTime()
+	var diffMin = diff / (1000 * 60)
+	return diffMin
 }

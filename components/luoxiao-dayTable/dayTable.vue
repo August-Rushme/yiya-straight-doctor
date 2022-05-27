@@ -482,7 +482,7 @@ export default {
       self.startId = item;
       clearTimeout(timeOutEvent);
       if (self.isToday == -1) {
-        this.showError('过去时间不可预订');
+        this.showError('过去时间不可创建');
         timeOutEvent = 1;
         return;
       }
@@ -508,7 +508,7 @@ export default {
         let idSt = self.createMeet.idSt,
           endId = self.createMeet.idEnd;
         if (!!this.hasMeeting(idSt, endId)) {
-          this.showError('会议冲突');
+          this.showError('日程冲突');
           self.isCreate = false;
           self.createMeet = '';
           return;
