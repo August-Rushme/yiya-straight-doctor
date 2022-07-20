@@ -41,6 +41,9 @@
 					<template v-else-if="item.type === 'image'">
 						<view class="image"><image @tap="preview(index)" :src="item.url" mode="widthFix"></image></view>
 					</template>
+					<template v-else-if="item.type === 'ctImage'">
+						<view class="image"><image @tap="preview(index)" :src="item.url" mode="widthFix"></image></view>
+					</template>
 					<template v-else-if="item.type === 'audio'">
 						<template v-if="item.tmpId === loadingIndex && item.isMe ? isloading[loadingIndex] : false">
 							<u-loading-icon mode="circle" :text="progress"></u-loading-icon>
@@ -49,7 +52,28 @@
 							<view class="video"><video :src="item.url" v-if="!!item.url" controls show-progress></video></view>
 						</template>
 					</template>
-
+                   <template v-else-if="item.type === 'case'">
+                   <uni-card spacing="0" margin="0" @click="goToCaseDetail(item.medicalRecord.id)">
+                   	<view style="width: 350rpx;">
+                   		<view class="d-flex j-sb border-bottom">
+                   			<view>
+                   						 <text style="width: 3em;">病人:</text> <text> {{item.medicalRecord.userName}}</text>
+                   			</view>
+                   			<view >
+                   					      <text style="width: 3em;">医生:</text> <text> {{item.medicalRecord.doctor}}</text>
+                   			</view>
+                   		</view>
+                   		<view class="d-flex border-bottom pt-1">
+                   			<text style="width: 3em;">处置:</text>
+                   		     <text class="cardContent">{{item.medicalRecord.handle}}</text>
+                   		</view>
+                   		<view class="d-flex pt-1">
+                   			<text style="width: 3em;">医嘱:</text>
+                   		     <text class="cardContent">{{item.medicalRecord.advice}}</text>
+                   		</view>
+                   	</view>     
+                   </uni-card>
+                   </template>
 					<template v-if="item.isMe">
 						<view class="d-flex j-end mt-1">
 							<view class="isRead">{{ item.isRead ? '已读' : '未读' }}</view>
@@ -81,7 +105,7 @@
 				</template>
 			</u-input>
 			<template v-if="showMoreFn">
-				<view class="moreFn d-flex">
+				<view class="moreFn  mb-3 d-flex">
 					<view class="d-flex flex-column j-center a-center" style="margin-right: 60rpx;">
 						<view class="d-flex flex-column j-center a-center" style="width: 120rpx">
 							<uni-icons type="image" size="40" @tap="chooseImage"></uni-icons>
@@ -93,34 +117,16 @@
 							<uni-icons type="camera" size="40" @tap="chooseVideo"></uni-icons>
 							<view class="text-muted" style="margin-top: -30rpx;">视频文件</view>
 						</view>
-					</view>
-					<view class="d-flex flex-column j-center a-center" style="margin-right: 60rpx;">
-						<view class="d-flex flex-column j-center a-center" style="width: 120rpx">
-							<view class="d-flex j-center a-center" style="width: 40px;height: 40px;margin-top: 12px;">
-								<image src="/static/images/ct2.png" style="width: 35px;height: 35px;"></image>
-							</view>
-
-							<view class="text-muted">CT</view>
-						</view>
-					</view>
-					<view class="d-flex flex-column j-center a-center">
-						<view class="d-flex flex-column j-center a-center" style="width: 120rpx">
-							<view class="d-flex j-center a-center" style="width: 40px;height: 40px;margin-top: 10px;">
-								<image src="/static/images/bingli2.png" style="width: 35px;height: 35px;"></image>
-							</view>
-
-							<view class="text-muted">病例</view>
-						</view>
-					</view>
+					</view>	
 				</view>
-				<view class="d-flex mb-5">
+	<!-- 			<view class="d-flex mb-5">
 					<view class="d-flex flex-column j-center a-center" style="width: 120rpx;margin-left: 60rpx;">
 						<view class="d-flex flex-column j-center a-center" >
 							<uni-icons type="videocam" size="40" @tap="callVideo"></uni-icons>
 							<view class="text-muted" style="margin-top: -30rpx;">视频问诊</view>
 						</view>
 					</view>
-				</view>
+				</view> -->
 			</template>
 			<template v-if="startRecord">
 				<view class="audioModal d-flex flex-column a-center px-5 py-2">
@@ -143,6 +149,85 @@
 				</view>
 			</template>
 		</view>
+		
+		<!-- 弹出层 -->
+			<u-popup :show="casePoupopshow" @close="casePupoClose">
+				<view class="p-1">
+					<view class="d-flex j-sb">
+						<text class="text-muted" style="font-size: 32rpx;" @click="casePupoClose">取消</text>
+						<text style="color: #22b1ac;font-size: 32rpx;"  @click="sendCase">发送</text>
+					</view>
+					
+						<scroll-view  scroll-y="true" style="max-height: 440rpx;" >
+							<block v-for="(item2,index2) in caseList" :key="index2">
+								<uni-card spacing="0" @click="goToCaseDetail(item2.id)">
+									<view>
+										<view class="d-flex j-sb pb-1 border-bottom">
+											<view>
+														 <text style="display: inline-block;width: 3em;">病人:</text> <text>{{item2.userName}}</text>
+											</view>
+											<view @click.stop="selectCase(index2)">
+												<template v-if="item2.status === true">
+													<u-icon name="checkmark-circle-fill" color="#22b1ac" size="22"></u-icon>
+												</template>
+												<template v-else>
+													<view class="circle">
+														
+													</view>
+												</template>
+											</view>
+										
+								           
+										</view  >
+										<view class="border-bottom py-1">
+												      <text style="display: inline-block;width: 3em;">医生:</text> <text> {{item2.doctor}}</text>
+										</view>
+										<view class="d-flex border-bottom py-1">
+											<text style="width: 3em;">处置:</text>
+										     <text class="cardContent">{{item2.handle}}</text>
+										</view>
+										<view class="d-flex py-1">
+											<text style="width: 3em;">医嘱:</text>
+										     <text class="cardContent">{{item2.advice}}</text>
+										</view>
+									</view>
+								
+								</uni-card>
+							</block>
+					
+						</scroll-view>
+				</view>
+
+				</u-popup>
+				<!-- CT 弹出层 -->
+				<u-popup :show="ctPoupopshow" @close="ctPupopClose">
+			
+					<view class="p-2">
+						<view class="d-flex j-sb">
+							<text class="text-muted" style="font-size: 32rpx;" @click="ctPupopClose">取消</text>
+							<text style="color: #22b1ac;font-size: 32rpx;"  @click="sendCT">发送</text>
+						</view>
+						<block v-for="(item3,index3) in myCT" :key="index3">
+							<view class="p-2" style="position: relative;" @click.stop="selectCT(index3)">
+								<image :src="item3.src" mode="widthFix"></image>
+								<view  style="position: absolute;right: 30rpx; top: 30rpx;">
+									<template v-if="item3.status === true">
+										<u-icon name="checkmark-circle-fill" color="#22b1ac" size="22"></u-icon>
+									</template>
+									<template v-else>
+										<view class="circle">
+											
+										</view>
+									</template>
+								</view>
+							</view>
+					
+						</block>
+					</view>
+		
+					
+				</u-popup>
+		
 	</view>
 </template>
 
@@ -160,10 +245,28 @@ export default {
 				pageSize: 15,
 				pageNum: 1
 			},
+			caseList: [
+			],
+			tmpCase: {
+				
+			},
+			ctPoupopshow: false,
+			myCT: [
+				{
+					src: 'https://picb.zhimg.com/v2-4c86675b25f32c2b77910b843f04c7c4_r.jpg',
+					status: false
+				},
+				{
+					src: 'https://ts1.cn.mm.bing.net/th/id/R-C.0c9ba80488846941e78754601909cfc4?rik=zNESrtx%2buBYg4g&riu=http%3a%2f%2fwww.xjishu.com%2fimg%2fyytu%2fyx%2f2533-121120120I8.jpg&ehk=OSbrWfp62I8DX1viMqcGb%2bfvKy1QdKg5yEMvy4%2b6KA8%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1',
+					status: false
+				}
+				],
+			tmpCT: '',
 			startRecord: false,
 			nickname: uni.getStorageSync('userInfo').nickname,
 			avatar: uni.getStorageSync('userInfo').photo,
 			recordSecondTime: 1,
+			casePoupopshow: false,
 			recordMinTime: 0,
 			blockHeight: 180,
 			showMoreFn: false,
@@ -202,6 +305,18 @@ export default {
 		});
 		const _this = this;
 		this.receiverId = options.id;
+		const myMedicial = await this.getMedicalCaseAction({
+			id: parseInt(uni.getStorageSync('userInfo').id),
+			pageSize: 99,
+			pageNum: 1
+		})
+	 this.caseList = myMedicial.list.map(item => 
+	{
+		return {
+	       ...item,
+			status: false
+		}
+	})
 		const receiverInfo = await this.getUserByIdAction(parseInt(options.id));
 		const messagelist = await this.getMessageAction({
 			fromId: parseInt(uni.getStorageSync('userInfo').id),
@@ -214,7 +329,6 @@ export default {
 			pageNum: 1,
 			pageSize: 9999
 		});
-
 		this.hasMore = messageAll.list.length > 15 ? true : false;
 		let index = 0;
 		const rawList = [];
@@ -228,6 +342,7 @@ export default {
 				isRead: item.status === 1 ? true : false,
 				type: item.type,
 				url: item.url,
+				medicalRecord: item.medicalRecord,
 				nickName: uni.getStorageSync('userInfo').id == item.userId ? _this.nickname : receiverInfo.nickname,
 				avatar: uni.getStorageSync('userInfo').id == item.userId ? _this.avatar : receiverInfo.photo
 			};
@@ -277,6 +392,7 @@ export default {
 		this.messageReceived();
 		recorderManager.onStop(function(res) {
 			if (_this.canSendRecord) {
+				_this.sendAudioMessage(res);
 				_this.messagelist.push({
 					type: 'record',
 					isMe: true,
@@ -310,6 +426,7 @@ export default {
 				}
 			}, 1000);
 		});
+		// 监听录音
 		uni.$on('stopRecord', function(data) {
 			_this.canSendRecord = !(_this.windowHeight - data.position.clientY > 80 || (_this.recordMinTime === 0 && _this.recordSecondTime === 1));
 			recorderManager.stop();
@@ -329,6 +446,7 @@ export default {
 	},
 	onUnload() {
 		this.first = true;
+		// 断开连接
 		this.goeasy.disconnect({
 			onSuccess: function() {
 				console.log('GoEasy disconnect successfully.');
@@ -339,30 +457,100 @@ export default {
 		});
 	},
 	methods: {
-		...mapActions(['getUserByIdAction', 'messageSaveAction', 'getMessageAction', 'remarkIsReadAction']),
-		// 视频通话
-		callVideo(){
+		...mapActions(['getUserByIdAction', 'messageSaveAction', 'getMessageAction', 'remarkIsReadAction','getMedicalCaseAction']),
+	    goToCase(){
+		    this.casePoupopshow = true;
+		},
+		casePupoClose(){
+			this.casePoupopshow = false;
+		},
+		ctPupopClose()
+		{
+			this.ctPoupopshow = false;
+		},
+		chooseCT(){
+			this.ctPoupopshow = true;
+		},
+		goToCaseDetail(id){
+			uni.navigateTo({
+				url: `/subpackage-my/medical-detail/medical-detail?id=${id}`
+			})
+		},
+		// 发送病例
+		sendCase(){
+			const caseInfo = {
+				isMe: true,
+				isRead: false,
+				text: null,
+				nickName: this.nickname,
+				avatar: this.avatar,
+				medicalRecord: this.tmpCase
+			}
+			const message = this.wsCreatMessage('case', caseInfo);
+			this.wsSendMessage(message);
+			this.caseList.forEach(item => {
+				item.status = false;
+			})
+
+			this.casePoupopshow = false;
+			this.isPlus = false;
+		    this.pageToBottom();
+		},
+		// 发送CT
+		sendCT() {
+	           const ctInfo = {
+				isMe: true,
+				isRead: false,
+				text: null,
+				nickName: this.nickname,
+				avatar: this.avatar,
+				medicalRecord: null,
+				url: this.tmpCT
+			}
+			const message = this.wsCreatMessage('ctImage', ctInfo);
+			this.wsSendMessage(message);
+			this.myCT.forEach(item => {
+				item.status = false;
+			})
 			
+			this.ctPoupopshow = false;
+			this.isPlus = false;
+			this.pageToBottom();
+		},
+		selectCase(index){
+			this.tmpCase = this.caseList[index];
+			this.caseList.forEach(item => {
+				item.status = false;
+			})
+			this.caseList[index].status = !this.caseList[index].status;
+		},
+		selectCT(index){
+			this.tmpCT = this.myCT[index].src;
+			this.myCT.forEach(item => {
+				item.status = false;
+			})
+			this.myCT[index].status = !this.myCT[index].status;
 		},
 		setRead(){
 			const _this = this;
 			if (_this.first) {
-	
 				_this.allMessage.forEach(item => {
-					if (item.status === 0 && parseInt(item.receiverId) === parseInt(uni.getStorageSync('userInfo').id)) {
-						const res = _this.remarkIsReadAction({
-							id: item.id,
-							status: 1
-						});
-					}
+					
+	      if (item.status === 0 && parseInt(item.receiverId) === parseInt(uni.getStorageSync('userInfo').id)) {
+		   const res = _this.remarkIsReadAction({
+			id: item.id,
+			status: 1
+		  });
+	        }
 				});
 				_this.first = false;
 			}
 		},
+
 		// 底部控件相关函数
 		open() {
 			this.useInput = true;
-			this.blockHeight = 550;
+			this.blockHeight = 400;
 			this.showMoreFn = true;
 			this.isPlus = false;
 			this.pageToBottom();
@@ -432,7 +620,6 @@ export default {
 			});
 			this.messagelist = [...rawList, ...this.messagelist];
 			this.moreloading = false;
-			console.log(moreMessagelist, 6666);
 		},
 		sendMessage() {
 			if (this.message.length > 0) {
@@ -527,6 +714,41 @@ export default {
 				}
 			});
 		},
+		sendAudioMessage(audioFile){
+			//语音消息
+			  const  message = im.createAudioMessage({
+			      file: audioFile,//H5的视频file对象，Uniapp和小程序中录音组件RecorderManager.onStop得到的res对象
+			      to : {
+			          type : GoEasy.IM_SCENE.PRIVATE,   //私聊还是群聊，群聊为GoEasy.IM_SCENE.GROUP
+			          id : parseInt(_this.receiverId),
+			          data:{} //好友扩展数据, 任意格式的字符串或者对象，用于更新会话列表conversation.data
+			      },
+			  });
+			  this.im.sendMessage({
+			  	message: message,
+			  	onSuccess: async function(message) {
+			  		const Info = {
+			  			msg: message.payload.text,
+			  			status: 0,
+			  			sendDate: uni.$u.timeFormat(new Date(), 'yyyy-mm-dd hh:MM:ss'),
+			  			readDate: uni.$u.timeFormat(new Date(), 'yyyy-mm-dd hh:MM:ss'),
+			  			type: 'record',
+			  			url: message.payload.url,
+			  			userId: uni.getStorageSync('userInfo').id,
+			  			receiverId: _this.receiverId
+			  		};
+			  		const res = await _this.messageSaveAction(Info);
+			  		_this.messageId.push(res.id);
+			  		_this.pageToBottom();
+			  	},
+			  	onFailed: function(error) {
+			  		uni.$u.toast('发送失败');
+			  	}
+			  });
+			  
+		}
+
+		  ,
 		chooseImage() {
 			const _this = this;
 			uni.chooseImage({
@@ -623,8 +845,9 @@ export default {
 							messageId: message.messageId,
 							timestamp: message.timestamp,
 							isRead: message.read,
-							url: '',
-							text: message.payload.text
+							url: message.payload.url,
+							text: message.payload.text,
+							medicalRecord: message.payload.medicalRecord
 						});
 						const Info = {
 							msg: message.payload.text,
@@ -632,9 +855,10 @@ export default {
 							sendDate: uni.$u.timeFormat(new Date(), 'yyyy-mm-dd hh:MM:ss'),
 							readDate: uni.$u.timeFormat(new Date(), 'yyyy-mm-dd hh:MM:ss'),
 							type: message.type,
-							url: '',
+							url: message.payload.url,
 							userId: uni.getStorageSync('userInfo').id,
-							receiverId: _this.receiverId
+							receiverId: _this.receiverId,
+							medicalRecord: message.payload.medicalRecord
 						};
 						const res = await _this.messageSaveAction(Info);
 						_this.messageId.push(res.id);
@@ -669,7 +893,6 @@ export default {
 			const _this = this;
 
 			let onPrivateMessageReceived = function(message) {
-				if (_this.receiverId === message.senderId) {
 					const pushInfo = {
 						type: message.type,
 						isMe: false,
@@ -678,6 +901,7 @@ export default {
 						isRead: true,
 						avatar: _this.receiverAvatar,
 						text: message.payload.text,
+						medicalRecord: message.payload.medicalRecord,
 						url: message.payload.url,
 						nickName: _this.receiverName
 					};
@@ -687,28 +911,22 @@ export default {
 						_this.remarkAndSend(message);
 					};
 					if (message.type === 'mark') {
-						setTimeout(()=>{
-							const messageId = _this.messageId[_this.messageId.length-1];
-							console.log(messageId, 888);
-							const res = _this.remarkIsReadAction({
-								id: messageId,
-								status: 1
-							});
-						},100)
-				
+				setTimeout(()=>{
+					const messageId = _this.messageId[_this.messageId.length-1];
+					console.log(messageId, 888);
+					const res = _this.remarkIsReadAction({
+						id: messageId,
+						status: 1
+					});
+				},100)
 						_this.messagelist.forEach(item => {
 							if (item.messageId === message.payload.messageReadId) {
 								item.isRead = true;
 							}
 						});
-					} else if (message.type === 'image') {
-						update();
-					} else if (message.type === 'audio') {
-						update();
-					} else if (message.type === 'message') {
-						update();
+					} else {
+								update();
 					}
-				}
 			};
 			_this.im.on(GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, onPrivateMessageReceived);
 		}
@@ -892,6 +1110,19 @@ export default {
 		100% {
 			visibility: visible;
 		}
+	}
+	// 病例card 
+	.cardContent {
+		flex: 1;
+		overflow: hidden;
+	    white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	.circle {
+		width: 44rpx;
+		height: 44rpx;
+		border-radius: 50%;
+		border: 2rpx solid #eeeeee;
 	}
 }
 </style>

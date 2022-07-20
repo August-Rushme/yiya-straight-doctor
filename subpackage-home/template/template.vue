@@ -42,11 +42,21 @@
 						        		【图片】				
 						        	</view>
 						        </template>
-								<template v-else>
-									<view class="text-light-muted mt-1 content">
-										【视频】				
-									</view>
-								</template>
+							  <template v-else-if="item.latestMessage.type === 'case'">
+								<view class="text-light-muted mt-1 content">
+									【对方发送了一个病例】				
+								</view>
+							</template>
+							<template v-else-if="item.latestMessage.type === 'ctImage'">
+								<view class="text-light-muted mt-1 content">
+									【对方发送了一张CT】				
+								</view>
+							</template>
+							<template v-else>
+								<view class="text-light-muted mt-1 content">
+									【视频】				
+								</view>
+							</template>
 								<template v-if="item.unReadMount>0">
 								<view class="myBadage" :class="item.unReadMount > 99 ? 'px-2' : ''">
 									 {{item.unReadMount > 99 ? '99+' : item.unReadMount}}
