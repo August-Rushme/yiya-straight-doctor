@@ -202,7 +202,7 @@ this.otherNav[4].needMark = true;
         });
       } else {
         uni.navigateTo({
-          url: '/subpackage-my/login/login'
+          url: '/subpackage-home/login/login'
         });
       }
     }
