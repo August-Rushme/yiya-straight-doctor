@@ -1,6 +1,6 @@
 <template>
     <view class="u-input" :class="inputClass" :style="[wrapperStyle]">
-        <view class="u-input__content">
+        <view class="u-input__content" :style="{'paddingBottom': paddingBottom}">
             <view
                 class="u-input__content__prefix-icon"
                 v-if="prefixIcon || $slots.prefix"
@@ -17,33 +17,39 @@
 				<!-- 根据uni-app的input组件文档，H5和APP中只要声明了password参数(无论true还是false)，type均失效，此时
 					为了防止type=number时，又存在password属性，type无效，此时需要设置password为undefined
 				 -->
-            	<input
-            	    class="u-input__content__field-wrapper__field"
-            	    :style="[inputStyle]"
-            	    :type="type"
-            	    :focus="focus"
-            	    :cursor="cursor"
-            	    :value="innerValue"
-            	    :auto-blur="autoBlur"
-            	    :disabled="disabled || readonly"
-            	    :maxlength="maxlength"
-            	    :placeholder="placeholder"
-            	    :placeholder-style="placeholderStyle"
-            	    :placeholder-class="placeholderClass"
-            	    :confirm-type="confirmType"
-            	    :confirm-hold="confirmHold"
-            	    :hold-keyboard="holdKeyboard"
-            	    :cursor-spacing="cursorSpacing"
-            	    :adjust-position="adjustPosition"
-            	    :selection-end="selectionEnd"
-            	    :selection-start="selectionStart"
-            	    :password="password || type === 'password' || undefined"
-            	    @input="onInput"
-            	    @blur="onBlur"
-            	    @focus="onFocus"
-            	    @confirm="onConfirm"
-            	    @keyboardheightchange="onkeyboardheightchange"
-            	/>
+				 <template v-if="useInput">
+				 <input
+				     class="u-input__content__field-wrapper__field"
+				     :style="[inputStyle]"
+				     :type="type"
+				     :focus="focus"
+				     :cursor="cursor"
+				     :value="innerValue"
+				     :auto-blur="autoBlur"
+				     :disabled="disabled || readonly"
+				     :maxlength="maxlength"
+				     :placeholder="placeholder"
+				     :placeholder-style="placeholderStyle"
+				     :placeholder-class="placeholderClass"
+				     :confirm-type="confirmType"
+				     :confirm-hold="confirmHold"
+				     :hold-keyboard="holdKeyboard"
+				     :cursor-spacing="cursorSpacing"
+				     :adjust-position="adjustPosition"
+				     :selection-end="selectionEnd"
+				     :selection-start="selectionStart"
+				     :password="password || type === 'password' || undefined"
+				     @input="onInput"
+				     @blur="onBlur"
+				     @focus="onFocus"
+				     @confirm="onConfirm"
+				     @keyboardheightchange="onkeyboardheightchange"
+				 />
+				 </template>
+				 <template v-else>
+				 	<view style="height: 80rpx;line-height: 80rpx;width: 434rpx;" class="border text-center" @touchmove="touchmove"  @longpress="startRecord" @touchend="stopRecord">按住说话</view>
+				 </template>
+            	
             </view>
             <view
                 class="u-input__content__clear"
@@ -204,6 +210,20 @@ export default {
         },
     },
     methods: {
+		//发送录音
+		startRecord(){
+				uni.$emit('startRecord',{})
+		},
+		stopRecord(e){
+			uni.$emit('stopRecord',{
+				position: e.changedTouches[0]
+			})
+		},
+		touchmove(e) {
+			uni.$emit('touchmove',{
+				position: e.changedTouches[0]
+			})
+		},
 		// 在微信小程序中，不支持将函数当做props参数，故只能通过ref形式调用
 		setFormatter(e) {
 			this.innerFormatter = e

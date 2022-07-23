@@ -20,6 +20,14 @@ export default {
 			type: Boolean,
 			default: uni.$u.props.input.fixed
 		},
+		useInput: {
+			type: Boolean,
+			default: true,
+		},
+		paddingBottom: {
+			type: String,
+			default: '0rpx'
+		},
 		// 是否禁用输入框
 		disabled: {
 			type: Boolean,

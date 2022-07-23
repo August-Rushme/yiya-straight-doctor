@@ -6,7 +6,8 @@ import {
   getScheduleList
 } from '../service/calendar/http-calendar';
 import {
-  getUserById
+  getUserById,
+  getMedicalDetail
 } from '../service/user/user.js';
 import {
   messageSave
@@ -63,7 +64,16 @@ const store = new Vuex.Store({
       }
       return res.data
     },
-
+  // 病历详情
+  async getMedicalDetailAction({
+	  commit
+  },payload){
+	  const res = await getMedicalDetail(payload);
+	  if (!res.code == 200) {
+	    return uni.$u.toast('请求失败');
+	  }
+	  return res.data
+  },
     //我的消息 
     async getMessageListAction({
       commit
