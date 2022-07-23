@@ -30,7 +30,7 @@
 		data() {
 			return {
 				codeForm: {
-					phone: '18976329982'
+					phone: '13787007172'
 				},
 				getCodeColor: '#bec0cc',
 				getCodeBtnColor: '#e8eaf6',
@@ -47,7 +47,7 @@
 		},
 		methods: {
 			checkPhone(event) {
-				event = 18976329982
+				event = 13787007172
 				this.checkNum = uni.$u.test.mobile(event);
 
 				if (!this.checkNum) {
@@ -55,7 +55,7 @@
 				}
 			},
 			changeColor(event) {
-				event = 18976329982
+				event = 13787007172
 				let check = uni.$u.test.mobile(event);
 				if (check) {
 					this.codeForm.phone = event;
