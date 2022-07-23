@@ -27,14 +27,15 @@
 						</view>
 					</template>
 					<template v-else-if="item.type === 'record'">
-						<view class="d-flex" :class="item.isMe ? 'j-end' : ''" @click="playRecord(index)">
+				
+						<view class="d-flex" :class="item.isMe ? 'j-end' : ''" @click="playRecord(item.messageId)">
 							<view class="text">
-								{{ item.time }}"
-								<text>
-									<text class="horn horn1" :class="item.playState ? 'hornActive1' : ''"></text>
-									<text class="horn horn2" :class="item.playState ? 'hornActive2' : ''"></text>
-									<text class="horn horn3"></text>
-								</text>
+						{{ item.time }}"
+						<text>
+							<text class="horn horn1" :class="item.playState ? 'hornActive1' : ''"></text>
+							<text class="horn horn2" :class="item.playState ? 'hornActive2' : ''"></text>
+							<text class="horn horn3"></text>
+						</text>
 							</view>
 						</view>
 					</template>
@@ -117,7 +118,7 @@
 							<uni-icons type="camera" size="40" @tap="chooseVideo"></uni-icons>
 							<view class="text-muted" style="margin-top: -30rpx;">视频文件</view>
 						</view>
-					</view>	
+					</view>
 				</view>
 	<!-- 			<view class="d-flex mb-5">
 					<view class="d-flex flex-column j-center a-center" style="width: 120rpx;margin-left: 60rpx;">
@@ -259,6 +260,9 @@ export default {
 				{
 					src: 'https://ts1.cn.mm.bing.net/th/id/R-C.0c9ba80488846941e78754601909cfc4?rik=zNESrtx%2buBYg4g&riu=http%3a%2f%2fwww.xjishu.com%2fimg%2fyytu%2fyx%2f2533-121120120I8.jpg&ehk=OSbrWfp62I8DX1viMqcGb%2bfvKy1QdKg5yEMvy4%2b6KA8%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1',
 					status: false
+				},{
+					src: 'https://gss0.baidu.com/9fo3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D450%2C600/sign=850f468e79cf3bc7e855c5e8e4309697/2fdda3cc7cd98d10e3efb6b2283fb80e7bec907e.jpg',
+					status: false
 				}
 				],
 			tmpCT: '',
@@ -305,18 +309,6 @@ export default {
 		});
 		const _this = this;
 		this.receiverId = options.id;
-		const myMedicial = await this.getMedicalCaseAction({
-			id: parseInt(uni.getStorageSync('userInfo').id),
-			pageSize: 99,
-			pageNum: 1
-		})
-	 this.caseList = myMedicial.list.map(item => 
-	{
-		return {
-	       ...item,
-			status: false
-		}
-	})
 		const receiverInfo = await this.getUserByIdAction(parseInt(options.id));
 		const messagelist = await this.getMessageAction({
 			fromId: parseInt(uni.getStorageSync('userInfo').id),
@@ -336,12 +328,14 @@ export default {
 		this.setRead();
 		messagelist.list.reverse().forEach(item => {
 			const message = {
-				id: item.id,
+				messageId: item.id,
 				text: item.msg,
 				isMe: uni.getStorageSync('userInfo').id == item.userId ? true : false,
 				isRead: item.status === 1 ? true : false,
 				type: item.type,
 				url: item.url,
+				playState: false,
+				time: item.time,
 				medicalRecord: item.medicalRecord,
 				nickName: uni.getStorageSync('userInfo').id == item.userId ? _this.nickname : receiverInfo.nickname,
 				avatar: uni.getStorageSync('userInfo').id == item.userId ? _this.avatar : receiverInfo.photo
@@ -393,18 +387,7 @@ export default {
 		recorderManager.onStop(function(res) {
 			if (_this.canSendRecord) {
 				_this.sendAudioMessage(res);
-				_this.messagelist.push({
-					type: 'record',
-					isMe: true,
-					isRead: false,
-					playState: false,
-					text: null,
-					url: res.tempFilePath,
-					realTime: (res.duration / 1000).toFixed(3),
-					time: Math.ceil(res.duration / 1000),
-					nickName: _this.nickname,
-					avatar: _this.avatar
-				});
+	
 				_this.pageToBottom();
 			}
 		});
@@ -473,7 +456,7 @@ export default {
 		},
 		goToCaseDetail(id){
 			uni.navigateTo({
-				url: `/subpackage-my/medical-detail/medical-detail?id=${id}`
+				url: `/subpackage-patient/medical-detail/medical-detail?id=${id}`
 			})
 		},
 		// 发送病例
@@ -565,7 +548,10 @@ export default {
 			this.close();
 			this.useInput = !this.useInput;
 		},
-		playRecord(index) {
+		playRecord(id) {
+			const index = this.messagelist.findIndex(item => {
+				return item.messageId === id
+			})
 			const _this = this;
 			if (_this.lasteTimer !== null) {
 				clearTimeout(_this.lasteTimer);
@@ -576,6 +562,7 @@ export default {
 				}
 			});
 			this.messagelist[index].playState = !this.messagelist[index].playState;
+			console.log(this.messagelist[index].playState)
 			if (this.messagelist[index].playState) {
 				innerAudioContext.src = this.messagelist[index].url;
 			} else {
@@ -585,7 +572,7 @@ export default {
 			innerAudioContext.play();
 			_this.lasteTimer = setTimeout(() => {
 				_this.messagelist[index].playState = false;
-			}, _this.messagelist[index].realTime * 1000);
+			}, parseInt(_this.messagelist[index].time)  * 1000);
 		},
 		async lookMoreMessage() {
 			this.moreloading = true;
@@ -607,14 +594,17 @@ export default {
 			const rawList = [];
 			moreMessagelist.list.reverse().forEach(item => {
 				const message = {
-					id: item.id,
-					text: item.msg,
-					isMe: uni.getStorageSync('userInfo').id == item.userId ? true : false,
-					isRead: item.status === 1 ? true : false,
-					type: item.type,
-					url: item.url,
-					nickName: uni.getStorageSync('userInfo').id == item.userId ? _this.nickname : _this.receiverName,
-					avatar: uni.getStorageSync('userInfo').id == item.userId ? _this.avatar : _this.receiverAvatar
+	messageId: item.id,
+	text: item.msg,
+	isMe: uni.getStorageSync('userInfo').id == item.userId ? true : false,
+	isRead: item.status === 1 ? true : false,
+	type: item.type,
+	url: item.url,
+	time: item.time,
+		playState: false,
+	medicalRecord: item.medicalRecord,
+	nickName: uni.getStorageSync('userInfo').id == item.userId ? _this.nickname : _this.receiverName,
+	avatar: uni.getStorageSync('userInfo').id == item.userId ? _this.avatar : _this.receiverAvatar
 				};
 				rawList.push(message);
 			});
@@ -716,7 +706,8 @@ export default {
 		},
 		sendAudioMessage(audioFile){
 			//语音消息
-			  const  message = im.createAudioMessage({
+			const _this = this;
+			  const  message = this.im.createAudioMessage({
 			      file: audioFile,//H5的视频file对象，Uniapp和小程序中录音组件RecorderManager.onStop得到的res对象
 			      to : {
 			          type : GoEasy.IM_SCENE.PRIVATE,   //私聊还是群聊，群聊为GoEasy.IM_SCENE.GROUP
@@ -728,15 +719,28 @@ export default {
 			  	message: message,
 			  	onSuccess: async function(message) {
 			  		const Info = {
+					
 			  			msg: message.payload.text,
 			  			status: 0,
 			  			sendDate: uni.$u.timeFormat(new Date(), 'yyyy-mm-dd hh:MM:ss'),
 			  			readDate: uni.$u.timeFormat(new Date(), 'yyyy-mm-dd hh:MM:ss'),
 			  			type: 'record',
 			  			url: message.payload.url,
+						time: Math.ceil(audioFile.duration / 1000),
 			  			userId: uni.getStorageSync('userInfo').id,
 			  			receiverId: _this.receiverId
 			  		};
+					_this.messagelist.push({
+						messageId: message.messageId,
+						type: 'record',
+						isMe: true,
+						isRead: false,
+						text: null,
+						url: audioFile.tempFilePath,
+						time: Math.ceil(audioFile.duration / 1000),
+						nickName: _this.nickname,
+						avatar: _this.avatar
+					});
 			  		const res = await _this.messageSaveAction(Info);
 			  		_this.messageId.push(res.id);
 			  		_this.pageToBottom();
@@ -901,6 +905,8 @@ export default {
 						isRead: true,
 						avatar: _this.receiverAvatar,
 						text: message.payload.text,
+						time: message.payload.time,
+						playState: false,
 						medicalRecord: message.payload.medicalRecord,
 						url: message.payload.url,
 						nickName: _this.receiverName
@@ -911,20 +917,38 @@ export default {
 						_this.remarkAndSend(message);
 					};
 					if (message.type === 'mark') {
-				setTimeout(()=>{
+				  setTimeout(()=>{
 					const messageId = _this.messageId[_this.messageId.length-1];
-					console.log(messageId, 888);
+					
 					const res = _this.remarkIsReadAction({
 						id: messageId,
 						status: 1
 					});
-				},100)
+				 },100)
 						_this.messagelist.forEach(item => {
 							if (item.messageId === message.payload.messageReadId) {
 								item.isRead = true;
 							}
 						});
-					} else {
+					}else if( message.type !== 'mark' && message.payload.duration){
+                         _this.messagelist.push( {
+						type: "record",
+						isMe: false,
+						messageId: message.messageId,
+						timestamp: message.timestamp,
+						isRead: true,
+						time: Math.ceil( message.payload.duration),
+						avatar: _this.receiverAvatar,
+							playState: false,
+						text: message.payload.text,
+						medicalRecord: message.payload.medicalRecord,
+						url: message.payload.url,
+						nickName: _this.receiverName
+					});
+            _this.pageToBottom();
+            _this.remarkAndSend(message);
+					} 
+					else {
 								update();
 					}
 			};

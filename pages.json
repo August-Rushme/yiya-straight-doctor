@@ -40,7 +40,15 @@
           "enablePullDownRefresh": false
         }
 
-      }, {
+      },
+	  {
+		"path": "medical-detail/medical-detail",
+		"style": {
+		    "navigationBarTitleText": "患者病历",
+		    "enablePullDownRefresh": false
+		  }
+	  },
+	  {
         "path": "record-detail/record-detail",
         "style": {
           "navigationBarTitleText": "",

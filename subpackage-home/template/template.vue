@@ -42,6 +42,11 @@
 						        		【图片】				
 						        	</view>
 						        </template>
+									<template v-else-if="item.latestMessage.type === 'record'">
+																	<view class="text-light-muted mt-1 content">
+																		【录音】				
+																	</view>
+																</template>
 							  <template v-else-if="item.latestMessage.type === 'case'">
 								<view class="text-light-muted mt-1 content">
 									【对方发送了一个病例】				
